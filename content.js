@@ -32,15 +32,15 @@ let mouseDownIntention = "click";
 
 const applyStyles = (btn, img) => {
   btn.className = "draggable-btn";
-  chrome.storage.local.get(["arrow-position"], (res) => {
-    if (res.x && res.y) {
-      btn.style.top = res.y + "px";
-      btn.style.left = res.x + "px";
-    } else {
-      btn.style.top = "50vh";
-      btn.style.left = "calc(100vh - 25px)";
+  chrome.storage.local.get(
+    // default values
+    { arrowPosition: { x: "50vh", y: "calc(100vh - 25px)" } },
+    ({ arrowPosition }) => {
+      debug("locally saved arrow position", arrowPosition);
+      btn.style.top = arrowPosition.y;
+      btn.style.left = arrowPosition.x;
     }
-  });
+  );
   // TODO: make this customizable
   img.style.width = "80px";
   img.style.height = "80px";
@@ -68,7 +68,6 @@ const dragElement = (el, timeout) => {
     const newElementY = el.offsetTop - previousCursorY;
     el.style.top = newElementY + "px";
     el.style.left = newElementX + "px";
-    chrome.storage.local.set({ x: newElementX, y: newElementY });
   };
 
   const closeDragElement = () => {
@@ -79,6 +78,12 @@ const dragElement = (el, timeout) => {
 
     document.onmouseup = null;
     document.onmousemove = null;
+
+    if (mouseDownIntention === "mouseup") {
+      chrome.storage.local.set({
+        arrowPosition: { x: el.style.left, y: el.style.top },
+      });
+    }
   };
 
   const dragMouseDown = (e) => {
