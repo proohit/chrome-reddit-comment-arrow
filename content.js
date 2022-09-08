@@ -41,32 +41,34 @@ const applyStyles = (btn, img) => {
       btn.style.left = "calc(100vh - 25px)";
     }
   });
+  // TODO: make this customizable
   img.style.width = "80px";
   img.style.height = "80px";
 };
 
-const dragElement = (el) => {
-  let pos1 = 0,
-    pos2 = 0,
-    pos3 = 0,
-    pos4 = 0;
+const dragElement = (el, timeout) => {
+  let previousCursorX = 0,
+    previousCursorY = 0,
+    currentCursorX = 0,
+    currentCursorY = 0;
 
+  // this is to track how long a mousedown is being pressed to determine if move or click. Also imitates the mobile app behaviour to hold some time to move.
   let intentionTimeout;
 
   const elementDrag = (e) => {
     e = e || window.event;
     e.preventDefault();
     // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
+    previousCursorX = currentCursorX - e.clientX;
+    previousCursorY = currentCursorY - e.clientY;
+    currentCursorX = e.clientX;
+    currentCursorY = e.clientY;
     // set the element's new position:
-    const newX = el.offsetLeft - pos1;
-    const newY = el.offsetTop - pos2;
-    el.style.top = newY + "px";
-    el.style.left = newX + "px";
-    chrome.storage.local.set({ x: newX, y: newY });
+    const newElementX = el.offsetLeft - previousCursorX;
+    const newElementY = el.offsetTop - previousCursorY;
+    el.style.top = newElementY + "px";
+    el.style.left = newElementX + "px";
+    chrome.storage.local.set({ x: newElementX, y: newElementY });
   };
 
   const closeDragElement = () => {
@@ -86,11 +88,11 @@ const dragElement = (el) => {
       debug("dragMouseDown > intentionTimeout", { mouseDownIntention });
       // call a function whenever the cursor moves:
       document.onmousemove = elementDrag;
-    }, 500);
+    }, timeout);
     e = e || window.event;
     // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
+    currentCursorX = e.clientX;
+    currentCursorY = e.clientY;
     document.onmouseup = closeDragElement;
   };
 
@@ -99,7 +101,6 @@ const dragElement = (el) => {
 
 const scrollToNextComment = (e) => {
   e.preventDefault();
-  e.stopPropagation();
   if (mouseDownIntention === "mouseup") {
     debug("scrollToNextComment", { mouseDownIntention });
     mouseDownIntention = "click";
@@ -114,7 +115,7 @@ const scrollToNextComment = (e) => {
 
 const findNextCommentNearestToCenter = () => {
   let absoluteYViewportCenter = window.innerHeight / 2 + window.scrollY;
-  let minimumDistance = 50000; // defaults to high to begin search
+  let minimumDistance = Infinity; // defaults to high to begin search
   let minimumDistanceCommentElement = null;
   for (let commentElement of topLevelComments) {
     const commentElementPos = commentElement.getBoundingClientRect();
@@ -122,7 +123,7 @@ const findNextCommentNearestToCenter = () => {
     // negative distance means above center, positive means below center, zero means exactly at center
     let distanceBetweenElementAndViewPortCenter =
       absoluteYCommentElement - absoluteYViewportCenter;
-    // we want the next element, since we saw this comment already
+    // we want the next element. If the element is exactly at or above center, we skip this current element
     if (distanceBetweenElementAndViewPortCenter <= 0) continue;
     if (distanceBetweenElementAndViewPortCenter < minimumDistance) {
       minimumDistance = distanceBetweenElementAndViewPortCenter;
@@ -141,7 +142,8 @@ const prepareUi = () => {
   applyStyles(btn, img);
 
   // events
-  dragElement(btn);
+  // TODO: make timeout customizable
+  dragElement(btn, 500);
   btn.addEventListener("click", scrollToNextComment);
 
   btn.appendChild(img);
