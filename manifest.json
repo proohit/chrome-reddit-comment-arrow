@@ -27,7 +27,7 @@
         "button.css"
       ],
       "matches": [
-        "https://www.reddit.com/r/*/comments/*"
+        "https://www.reddit.com/*"
       ]
     }
   ],

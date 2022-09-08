@@ -1,6 +1,8 @@
-const debug = (...data) => {
-  console.debug("[REDDIT-COMMENT-ARROW]", data);
-};
+// Globals
+
+let topLevelComments = [];
+
+let mouseDownIntention = "click";
 
 const getAllComments = () =>
   [...document.querySelectorAll(".Comment")].map(
@@ -10,15 +12,13 @@ const getAllComments = () =>
 const getAllTopLevelComments = () => {
   const allComments = getAllComments();
   return allComments.filter((comment) => {
-    const rawPad = comment.style.paddingLeft;
-    let pad = Number(rawPad.replace("px", ""));
-    return pad <= 16;
+    const rawPadding = comment.style.paddingLeft;
+    const padding = Number(rawPadding.replace("px", ""));
+    return padding <= 16;
   });
 };
 
-let topLevelComments = getAllTopLevelComments();
-debug("initial topLevelComments", topLevelComments);
-const resizeObserver = new ResizeObserver(() => {
+let resizeObserver = new ResizeObserver(() => {
   topLevelComments = getAllTopLevelComments();
   debug(
     "Document body size changed, reloading all topLevelComments",
@@ -26,9 +26,11 @@ const resizeObserver = new ResizeObserver(() => {
   );
 });
 
-resizeObserver.observe(document.body);
+// utils
 
-let mouseDownIntention = "click";
+const debug = (...data) => {
+  console.debug("[REDDIT-COMMENT-ARROW]", data);
+};
 
 const applyStyles = (btn, img) => {
   btn.className = "draggable-btn";
@@ -138,7 +140,11 @@ const findNextCommentNearestToCenter = () => {
   return minimumDistanceCommentElement;
 };
 
-const prepareUi = () => {
+const constructUi = () => {
+  debug("constructing ui");
+
+  resizeObserver.observe(document.body);
+
   const btn = document.createElement("button");
   const img = document.createElement("img");
 
@@ -155,7 +161,46 @@ const prepareUi = () => {
   document.body.appendChild(btn);
 };
 
-prepareUi();
+const deconstructUi = () => {
+  debug("deconstructing ui");
+  const btn = document.querySelector(".draggable-btn");
+  if (btn) {
+    document.body.removeChild(btn);
+  }
+  resizeObserver.unobserve(document.body);
+};
+
+// url helper
+
+const redditUrlPattern = new URLPattern(
+  "/r/.*/comments/.*",
+  "https://www.reddit.com"
+);
+
+const isCommentsPage = (location) => {
+  return redditUrlPattern.test(location);
+};
+
+const onUrlChange = (newUrl) => {
+  if (isCommentsPage(newUrl)) {
+    debug("Url changed and is comments page");
+    constructUi();
+  } else {
+    debug("Url changed and is no comments page");
+    deconstructUi();
+  }
+};
+
+let lastUrl = location.href;
+new MutationObserver(() => {
+  const url = location.href;
+  if (url !== lastUrl) {
+    lastUrl = url;
+    onUrlChange(url);
+  }
+}).observe(document, { subtree: true, childList: true });
+
+onUrlChange(window.location.href);
 
 function visualDebug(yPos, color = "red") {
   const vis = document.createElement("hr");
