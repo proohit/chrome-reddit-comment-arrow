@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: python3 set_version.py
+      - uses: vimtor/action-zip@v1
+        with:
+          files: manifest.json content.js button.css images/ README.md LICENSE.md
+          dest: ./chrome-reddit-comment-arrow-${{ env.VERSION }}.zip
+          recursive: false
+      - uses: actions/upload-artifact@v3
+        with:
+          name: chrome-reddit-comment-arrow-${{ env.VERSION }}
+          path: ./chrome-reddit-comment-arrow-${{ env.VERSION }}.zip
+      - name: Tag version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: v${{ env.VERSION }}
+          tag_prefix: ""
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: ./chrome-reddit-comment-arrow-${{ env.VERSION }}.zip
+          automatic_release_tag: "latest"
