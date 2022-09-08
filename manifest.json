@@ -1,0 +1,46 @@
+{
+  "name": "Reddit Comment Arrow",
+  "description": "The loved arrow in the reddit comment section to skip to the next top level comment",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "action": {
+    "default_icon": {
+      "16": "/images/Reddit Comment Arrow@16.png",
+      "32": "/images/Reddit Comment Arrow@32.png",
+      "128": "/images/Reddit Comment Arrow@128.png"
+    }
+  },
+  "icons": {
+    "16": "/images/Reddit Comment Arrow@16.png",
+    "32": "/images/Reddit Comment Arrow@32.png",
+    "128": "/images/Reddit Comment Arrow@128.png"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "button.css"
+      ],
+      "matches": [
+        "https://www.reddit.com/r/*/comments/*"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "images/Reddit-Comment-Arrow.svg"
+      ],
+      "matches": [
+        "https://www.reddit.com/*"
+      ]
+    }
+  ]
+}
