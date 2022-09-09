@@ -18,12 +18,47 @@ const getAllTopLevelComments = () => {
   });
 };
 
-let resizeObserver = new ResizeObserver(() => {
+const hasSomeParentCommentInSubtree = (parent, comment) => {
+  return parent.querySelector(`#${comment.id}`) !== null;
+};
+
+/**
+ *
+ * @param {ParentNode} parent
+ * @param {ParentNode[]} topLevelComments
+ */
+const findCommentContainer = (
+  parent,
+  topLevelComments = getAllTopLevelComments()
+) => {
+  if (parent) {
+    let isCommentContainer = true;
+    for (let comment of topLevelComments) {
+      if (!hasSomeParentCommentInSubtree(parent, comment)) {
+        isCommentContainer = false;
+        break;
+      }
+    }
+    if (isCommentContainer) {
+      return parent;
+    } else if (parent.parentNode) {
+      return findCommentContainer(parent.parentNode, topLevelComments);
+    }
+  } else if (topLevelComments.length > 0) {
+    const firstTopLevelComment = topLevelComments[0];
+    if (firstTopLevelComment.parentNode) {
+      return findCommentContainer(
+        firstTopLevelComment.parentNode,
+        topLevelComments
+      );
+    }
+  }
+  return null;
+};
+
+let commentContainerObserver = new MutationObserver(() => {
   topLevelComments = getAllTopLevelComments();
-  debug(
-    "Document body size changed, reloading all topLevelComments",
-    topLevelComments
-  );
+  debug("comment size changed", topLevelComments);
 });
 
 // utils
@@ -140,25 +175,35 @@ const findNextCommentNearestToCenter = () => {
   return minimumDistanceCommentElement;
 };
 
-const constructUi = () => {
+const constructUi = async () => {
   debug("constructing ui");
+  const timeoutDuration = 5000;
+  debug(`sleeping for ${timeoutDuration}ms`);
+  setTimeout(() => {
+    debug(`finished sleeping for ${timeoutDuration}ms`);
+    const commentContainer = findCommentContainer();
+    if (commentContainer) {
+      debug("commentContainer", commentContainer);
+      commentContainerObserver.observe(commentContainer, {
+        childList: true,
+      });
+    }
 
-  resizeObserver.observe(document.body);
+    const btn = document.createElement("button");
+    const img = document.createElement("img");
 
-  const btn = document.createElement("button");
-  const img = document.createElement("img");
+    img.src = chrome.runtime.getURL("./images/Reddit-Comment-Arrow.svg");
 
-  img.src = chrome.runtime.getURL("./images/Reddit-Comment-Arrow.svg");
+    applyStyles(btn, img);
 
-  applyStyles(btn, img);
+    // events
+    // TODO: make timeout customizable
+    dragElement(btn, 500);
+    btn.addEventListener("click", scrollToNextComment);
 
-  // events
-  // TODO: make timeout customizable
-  dragElement(btn, 500);
-  btn.addEventListener("click", scrollToNextComment);
-
-  btn.appendChild(img);
-  document.body.appendChild(btn);
+    btn.appendChild(img);
+    document.body.appendChild(btn);
+  }, timeoutDuration);
 };
 
 const deconstructUi = () => {
@@ -167,7 +212,7 @@ const deconstructUi = () => {
   if (btn) {
     document.body.removeChild(btn);
   }
-  resizeObserver.unobserve(document.body);
+  commentContainerObserver.disconnect();
 };
 
 // url helper
