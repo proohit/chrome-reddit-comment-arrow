@@ -7,6 +7,7 @@
     "storage"
   ],
   "action": {
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "/images/Logo@16.png.png",
       "32": "/images/Logo@32.png",

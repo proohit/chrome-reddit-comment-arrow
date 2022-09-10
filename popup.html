@@ -1,0 +1,81 @@
+<html lang="en">
+  <head>
+    <style>
+      body {
+        min-width: 300px;
+        background-color: #f5f5f5;
+      }
+      input {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+        padding: 8px;
+      }
+
+      label {
+        font-size: 16px;
+      }
+
+      button {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+        padding: 8px;
+      }
+
+      button:hover {
+        background-color: #ddd;
+        cursor: pointer;
+      }
+
+      .header {
+        margin: 8px;
+        padding: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .options h2 {
+        text-align: left;
+      }
+      .options {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin: 8px;
+        padding: 16px;
+        gap: 8px;
+      }
+
+      .confirmation {
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <img src="./images/Logo.svg" alt="logo" />
+      <h1>Reddit Comment Arrow</h1>
+    </div>
+    <div class="options">
+      <h2>Options</h2>
+
+      <label for="iconSize">Button size (in pixels)</label>
+      <input id="iconSize" type="number" />
+
+      <label for="moveDelay"
+        >Delay until button can be moved (in miliseconds)
+      </label>
+      <input id="moveDelay" type="number" />
+
+      <button id="saveOptions">Save</button>
+    </div>
+    <script src="./popup.js"></script>
+  </body>
+</html>
