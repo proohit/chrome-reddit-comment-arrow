@@ -21,7 +21,8 @@ const handleConfirmation = () => {
     document.removeChild(document.querySelector(".confirmation"));
 
   const confirmation = document.createElement("p");
-  confirmation.textContent = "Options saved!";
+  confirmation.textContent =
+    "Options saved and will be applied the next time the button is rendered.";
   confirmation.classList.add("confirmation");
   document.querySelector(".options").appendChild(confirmation);
 };
