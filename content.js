@@ -30,18 +30,24 @@ const debounce = (func, timeout = 300) => {
   // Option variables
   let moveDelay;
   let iconSize;
+  let scrolling;
 
   const res = await chrome.storage.local.get({
     moveDelay: 500,
     iconSize: 80,
+    scrolling: { strategy: "top", behavior: "smooth" },
   });
 
   chrome.storage.local.onChanged.addListener((changes) => {
+    debug("changes in storage", changes);
     if (changes.moveDelay) {
       moveDelay = changes.moveDelay.newValue;
     }
     if (changes.iconSize) {
       iconSize = changes.iconSize.newValue;
+    }
+    if (changes.scrolling) {
+      scrolling = changes.scrolling.newValue;
     }
     if (isCommentsPage(window.location.href)) {
       applyStyles();
@@ -50,12 +56,17 @@ const debounce = (func, timeout = 300) => {
 
   moveDelay = res.moveDelay;
   iconSize = res.iconSize;
+  scrolling = res.scrolling;
 
   // Globals
 
   let topLevelComments = [];
 
   let mouseDownIntention = "click";
+
+  const headerHeight = document
+    .querySelector("header")
+    .getBoundingClientRect().height;
 
   const applyStyles = (btn, img) => {
     btn.className = "draggable-btn";
@@ -131,22 +142,55 @@ const debounce = (func, timeout = 300) => {
     el.onmousedown = dragMouseDown;
   };
 
-  const scrollToNextComment = (e) => {
+  const scrollToComment = (comment) => {
+    if (!comment) return;
+    if (scrolling.strategy === "center") {
+      comment.scrollIntoView({
+        behavior: scrolling.behavior,
+        block: "center",
+      });
+    } else if (scrolling.strategy === "top") {
+      const yScrollPosition =
+        comment.getBoundingClientRect().y + window.scrollY - headerHeight;
+      window.scrollTo({
+        top: yScrollPosition,
+        behavior: scrolling.behavior,
+      });
+    }
+  };
+
+  const findAndScrollToNextComment = (e) => {
     e.preventDefault();
     if (mouseDownIntention === "mouseup") {
       debug("scrollToNextComment", { mouseDownIntention });
       mouseDownIntention = "click";
       return;
     }
-    const nextComment = findNextCommentNearestToCenter();
-    if (nextComment) {
-      nextComment.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    const nextComment = findNextComment();
+    scrollToComment(nextComment);
     debug(nextComment);
+  };
+
+  const findNextComment = () => {
+    const strategy = scrolling.strategy;
+    if (strategy === "top") {
+      return findNextCommentNearestToTop();
+    } else if (strategy === "center") {
+      return findNextCommentNearestToCenter();
+    }
   };
 
   const findNextCommentNearestToCenter = () => {
     let absoluteYViewportCenter = window.innerHeight / 2 + window.scrollY;
+    return findNextCommentWith(absoluteYViewportCenter, 0);
+  };
+
+  const findNextCommentNearestToTop = () => {
+    let absoluteViewportY = window.scrollY + headerHeight;
+    return findNextCommentWith(absoluteViewportY, 5);
+  };
+
+  const findNextCommentWith = (viewportY, skippingThreshold) => {
     let minimumDistance = Infinity; // defaults to high to begin search
     let minimumDistanceCommentElement = null;
     for (let commentElement of topLevelComments) {
@@ -154,9 +198,10 @@ const debounce = (func, timeout = 300) => {
       let absoluteYCommentElement = commentElementPos.y + window.scrollY;
       // negative distance means above center, positive means below center, zero means exactly at center
       let distanceBetweenElementAndViewPortCenter =
-        absoluteYCommentElement - absoluteYViewportCenter;
+        absoluteYCommentElement - viewportY;
       // we want the next element. If the element is exactly at or above center, we skip this current element
-      if (distanceBetweenElementAndViewPortCenter <= 0) continue;
+      if (distanceBetweenElementAndViewPortCenter <= skippingThreshold)
+        continue;
       if (distanceBetweenElementAndViewPortCenter < minimumDistance) {
         minimumDistance = distanceBetweenElementAndViewPortCenter;
         minimumDistanceCommentElement = commentElement;
@@ -188,7 +233,7 @@ const debounce = (func, timeout = 300) => {
 
     // events
     dragElement(btn);
-    btn.addEventListener("click", scrollToNextComment);
+    btn.addEventListener("click", findAndScrollToNextComment);
 
     btn.appendChild(img);
     document.body.appendChild(btn);
