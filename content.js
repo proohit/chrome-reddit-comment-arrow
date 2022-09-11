@@ -16,6 +16,13 @@ const debug = (...data) => {
   console.debug("[REDDIT-COMMENT-ARROW]", data);
 };
 
+const getButton = () => document.querySelector(".draggable-btn");
+
+const getButtonImage = () => {
+  const button = getButton();
+  return button.querySelector("img");
+};
+
 const debounce = (func, timeout = 300) => {
   let timer;
   return (...args) => {
@@ -50,7 +57,7 @@ const debounce = (func, timeout = 300) => {
       scrolling = changes.scrolling.newValue;
     }
     if (isCommentsPage(window.location.href)) {
-      applyStyles();
+      applyStyles(getButton(), getButtonImage());
     }
   });
 
@@ -82,6 +89,14 @@ const debounce = (func, timeout = 300) => {
     // TODO: make this customizable
     img.style.width = `${iconSize}px`;
     img.style.height = `${iconSize}px`;
+
+    if (topLevelComments.length <= 0) {
+      btn.classList.add("disabled");
+      btn.title = "Loading top level comments...";
+    } else {
+      btn.classList.remove("disabled");
+      btn.title = "";
+    }
   };
 
   const dragElement = (el) => {
@@ -212,7 +227,13 @@ const debounce = (func, timeout = 300) => {
 
   let bodyMutationObserver = new MutationObserver(
     debounce(() => {
-      topLevelComments = getAllTopLevelComments();
+      const newTopLevelComments = getAllTopLevelComments();
+      if (newTopLevelComments.length !== topLevelComments.length) {
+        topLevelComments = newTopLevelComments;
+        applyStyles(getButton(), getButtonImage());
+      } else {
+        topLevelComments = newTopLevelComments;
+      }
       debug("dom changed, reloading top level comments", topLevelComments);
     }, 200)
   );
