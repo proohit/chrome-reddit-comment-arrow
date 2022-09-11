@@ -20,7 +20,29 @@ const getButton = () => document.querySelector(".draggable-btn");
 
 const getButtonImage = () => {
   const button = getButton();
+  if (!button) return null;
   return button.querySelector("img");
+};
+
+const getOverlayPostScrollContainer = () => {
+  return document.querySelector("#overlayScrollContainer");
+};
+
+const isPostOverlay = () => {
+  return getOverlayPostScrollContainer() !== null;
+};
+
+const getOverlayPostScrollContainerHeaderHeight = () => {
+  if (isPostOverlay()) {
+    const overlayPostScrollContainer = getOverlayPostScrollContainer();
+    for (const child of overlayPostScrollContainer.children) {
+      if (getComputedStyle(child).position === "sticky") {
+        return child.getBoundingClientRect().height;
+      }
+    }
+    return 0;
+  }
+  return 0;
 };
 
 const debounce = (func, timeout = 300) => {
@@ -157,20 +179,42 @@ const debounce = (func, timeout = 300) => {
     el.onmousedown = dragMouseDown;
   };
 
-  const scrollToComment = (comment) => {
-    if (!comment) return;
-    if (scrolling.strategy === "center") {
-      comment.scrollIntoView({
-        behavior: scrolling.behavior,
-        block: "center",
-      });
-    } else if (scrolling.strategy === "top") {
-      const yScrollPosition =
-        comment.getBoundingClientRect().y + window.scrollY - headerHeight;
-      window.scrollTo({
+  const scrollToCommentAtTop = (comment) => {
+    let yScrollPosition = comment.getBoundingClientRect().y - headerHeight;
+    if (isPostOverlay()) {
+      const overlayPostScrollContainer = getOverlayPostScrollContainer();
+      yScrollPosition =
+        yScrollPosition +
+        overlayPostScrollContainer.scrollTop -
+        getOverlayPostScrollContainerHeaderHeight();
+      overlayPostScrollContainer.scrollTo({
+        left: 0,
         top: yScrollPosition,
         behavior: scrolling.behavior,
       });
+    } else {
+      yScrollPosition += window.scrollY;
+      window.scrollTo({
+        left: 0,
+        top: yScrollPosition,
+        behavior: scrolling.behavior,
+      });
+    }
+  };
+
+  const scrollToCommentAtCenter = (comment) => {
+    comment.scrollIntoView({
+      behavior: scrolling.behavior,
+      block: "center",
+    });
+  };
+
+  const scrollToComment = (comment) => {
+    if (!comment) return;
+    if (scrolling.strategy === "center") {
+      scrollToCommentAtCenter(comment);
+    } else if (scrolling.strategy === "top") {
+      scrollToCommentAtTop(comment);
     }
   };
 
@@ -202,7 +246,11 @@ const debounce = (func, timeout = 300) => {
 
   const findNextCommentNearestToTop = () => {
     let absoluteViewportY = window.scrollY + headerHeight;
-    return findNextCommentWith(absoluteViewportY, 5);
+    let offset = 5;
+    if (isPostOverlay()) {
+      offset += getOverlayPostScrollContainerHeaderHeight();
+    }
+    return findNextCommentWith(absoluteViewportY, offset);
   };
 
   const findNextCommentWith = (viewportY, skippingThreshold) => {
