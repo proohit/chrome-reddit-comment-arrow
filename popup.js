@@ -2,10 +2,13 @@ chrome.storage.local.get(
   {
     iconSize: "80",
     moveDelay: 500,
+    scrolling: { strategy: "top", behavior: "smooth" },
   },
   (res) => {
     document.getElementById("iconSize").value = res.iconSize;
     document.getElementById("moveDelay").value = res.moveDelay;
+    document.getElementById("scrollingStrategy").value = res.scrolling.strategy;
+    document.getElementById("scrollingBehavior").value = res.scrolling.behavior;
   }
 );
 
@@ -13,6 +16,10 @@ const handleSave = () => {
   return chrome.storage.local.set({
     iconSize: document.getElementById("iconSize").value,
     moveDelay: document.getElementById("moveDelay").value,
+    scrolling: {
+      strategy: document.getElementById("scrollingStrategy").value,
+      behavior: document.getElementById("scrollingBehavior").value,
+    },
   });
 };
 
@@ -25,6 +32,7 @@ const handleConfirmation = () => {
     "Options saved and will be applied the next time the button is rendered.";
   confirmation.classList.add("confirmation");
   document.querySelector(".options").appendChild(confirmation);
+  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
 };
 
 const closePopupDelayed = () => {

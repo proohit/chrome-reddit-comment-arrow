@@ -53,6 +53,18 @@
         gap: 8px;
       }
 
+      select {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+        padding: 8px;
+      }
+
+      select option {
+        font-size: 16px;
+      }
+
       .confirmation {
         font-size: 16px;
       }
@@ -73,6 +85,20 @@
         >Delay until button can be moved (in miliseconds)
       </label>
       <input id="moveDelay" type="number" />
+
+      <label for="scrollingStrategy"
+        >Position where the next comment will be at
+      </label>
+      <select id="scrollingStrategy">
+        <option value="top">Top</option>
+        <option value="center">Center</option>
+      </select>
+
+      <label for="scrollingBehavior">How the scrolling should behave </label>
+      <select id="scrollingBehavior">
+        <option value="smooth">Smooth</option>
+        <option value="auto">Normal</option>
+      </select>
 
       <button id="saveOptions">Save</button>
     </div>
