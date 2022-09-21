@@ -101,14 +101,14 @@ const debounce = (func, timeout = 300) => {
     btn.className = "draggable-btn";
     chrome.storage.local.get(
       // default values
-      { arrowPosition: { x: "50vh", y: "calc(100vh - 25px)" } },
+      { arrowPosition: { x: `calc(100% - ${iconSize}px - 25px)`, y: "50vh" } },
       ({ arrowPosition }) => {
         debug("locally saved arrow position", arrowPosition);
         btn.style.top = arrowPosition.y;
         btn.style.left = arrowPosition.x;
       }
     );
-    // TODO: make this customizable
+
     img.style.width = `${iconSize}px`;
     img.style.height = `${iconSize}px`;
 
