@@ -11,11 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: python3 set_version.py
-      - uses: vimtor/action-zip@v1
+      - uses: actions/setup-node@v3
         with:
-          files: manifest.json content.js button.css popup.html popup.js images/ README.md LICENSE.md
-          dest: ./chrome-reddit-comment-arrow-${{ env.VERSION }}.zip
-          recursive: false
+          node-version: 16
+      - name: Install dependencies
+        run: npm install
+      - name: Package Extension
+        run: npm run package -- ./chrome-reddit-comment-arrow-${{ env.VERSION }}.zip
       - uses: actions/upload-artifact@v3
         with:
           name: chrome-reddit-comment-arrow-${{ env.VERSION }}
