@@ -1,3 +1,7 @@
+export const headerHeight = document
+  .querySelector("header")
+  .getBoundingClientRect().height;
+
 export const getButton = () => document.querySelector(".draggable-btn");
 
 export const getButtonImage = () => {

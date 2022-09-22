@@ -1,11 +1,9 @@
-import { getAllTopLevelComments } from "./comments";
 import {
-  getButton,
-  getButtonImage,
-  getOverlayPostScrollContainer,
-  getOverlayPostScrollContainerHeaderHeight,
-  isPostOverlay,
-} from "./ui";
+  findNextComment,
+  getAllTopLevelComments,
+  scrollToComment,
+} from "./comments";
+import { getButton, getButtonImage } from "./ui";
 import { debounce, debug } from "./utils";
 
 (async () => {
@@ -45,10 +43,6 @@ import { debounce, debug } from "./utils";
   let topLevelComments = [];
 
   let mouseDownIntention = "click";
-
-  const headerHeight = document
-    .querySelector("header")
-    .getBoundingClientRect().height;
 
   const applyStyles = (btn, img) => {
     btn.className = "draggable-btn";
@@ -132,45 +126,6 @@ import { debounce, debug } from "./utils";
     el.onmousedown = dragMouseDown;
   };
 
-  const scrollToCommentAtTop = (comment) => {
-    let yScrollPosition = comment.getBoundingClientRect().y - headerHeight;
-    if (isPostOverlay()) {
-      const overlayPostScrollContainer = getOverlayPostScrollContainer();
-      yScrollPosition =
-        yScrollPosition +
-        overlayPostScrollContainer.scrollTop -
-        getOverlayPostScrollContainerHeaderHeight();
-      overlayPostScrollContainer.scrollTo({
-        left: 0,
-        top: yScrollPosition,
-        behavior: scrolling.behavior,
-      });
-    } else {
-      yScrollPosition += window.scrollY;
-      window.scrollTo({
-        left: 0,
-        top: yScrollPosition,
-        behavior: scrolling.behavior,
-      });
-    }
-  };
-
-  const scrollToCommentAtCenter = (comment) => {
-    comment.scrollIntoView({
-      behavior: scrolling.behavior,
-      block: "center",
-    });
-  };
-
-  const scrollToComment = (comment) => {
-    if (!comment) return;
-    if (scrolling.strategy === "center") {
-      scrollToCommentAtCenter(comment);
-    } else if (scrolling.strategy === "top") {
-      scrollToCommentAtTop(comment);
-    }
-  };
-
   const findAndScrollToNextComment = (e) => {
     e.preventDefault();
     if (mouseDownIntention === "mouseup") {
@@ -178,52 +133,9 @@ import { debounce, debug } from "./utils";
       mouseDownIntention = "click";
       return;
     }
-    const nextComment = findNextComment();
-    scrollToComment(nextComment);
+    const nextComment = findNextComment(scrolling, topLevelComments);
+    scrollToComment(nextComment, scrolling);
     debug(nextComment);
-  };
-
-  const findNextComment = () => {
-    const strategy = scrolling.strategy;
-    if (strategy === "top") {
-      return findNextCommentNearestToTop();
-    } else if (strategy === "center") {
-      return findNextCommentNearestToCenter();
-    }
-  };
-
-  const findNextCommentNearestToCenter = () => {
-    let absoluteYViewportCenter = window.innerHeight / 2 + window.scrollY;
-    return findNextCommentWith(absoluteYViewportCenter, 0);
-  };
-
-  const findNextCommentNearestToTop = () => {
-    let absoluteViewportY = window.scrollY + headerHeight;
-    let offset = 5;
-    if (isPostOverlay()) {
-      offset += getOverlayPostScrollContainerHeaderHeight();
-    }
-    return findNextCommentWith(absoluteViewportY, offset);
-  };
-
-  const findNextCommentWith = (viewportY, skippingThreshold) => {
-    let minimumDistance = Infinity; // defaults to high to begin search
-    let minimumDistanceCommentElement = null;
-    for (let commentElement of topLevelComments) {
-      const commentElementPos = commentElement.getBoundingClientRect();
-      let absoluteYCommentElement = commentElementPos.y + window.scrollY;
-      // negative distance means above center, positive means below center, zero means exactly at center
-      let distanceBetweenElementAndViewPortCenter =
-        absoluteYCommentElement - viewportY;
-      // we want the next element. If the element is exactly at or above center, we skip this current element
-      if (distanceBetweenElementAndViewPortCenter <= skippingThreshold)
-        continue;
-      if (distanceBetweenElementAndViewPortCenter < minimumDistance) {
-        minimumDistance = distanceBetweenElementAndViewPortCenter;
-        minimumDistanceCommentElement = commentElement;
-      }
-    }
-    return minimumDistanceCommentElement;
   };
 
   let bodyMutationObserver = new MutationObserver(
