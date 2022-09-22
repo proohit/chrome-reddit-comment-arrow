@@ -4,6 +4,7 @@ import {
   scrollToComment,
 } from "./comments";
 import { getButton, getButtonImage } from "./ui";
+import { createUrlWatcher, isCommentsPage } from "./url";
 import { debounce, debug } from "./utils";
 
 (async () => {
@@ -152,6 +153,9 @@ import { debounce, debug } from "./utils";
   );
 
   const constructUi = async () => {
+    if (!isCommentsPage(window.location.href)) {
+      return;
+    }
     debug("constructing ui");
     bodyMutationObserver.observe(document.body, {
       subtree: true,
@@ -182,17 +186,6 @@ import { debounce, debug } from "./utils";
     bodyMutationObserver.disconnect();
   };
 
-  // url helper
-
-  const redditUrlPattern = new URLPattern(
-    "/r/.*/comments/.*",
-    "https://www.reddit.com"
-  );
-
-  const isCommentsPage = (location) => {
-    return redditUrlPattern.test(location);
-  };
-
   const onUrlChange = (newUrl) => {
     if (isCommentsPage(newUrl)) {
       debug("Url changed and is comments page");
@@ -203,15 +196,7 @@ import { debounce, debug } from "./utils";
     }
   };
 
-  let lastUrl = location.href;
-  new MutationObserver(() => {
-    const url = location.href;
-    if (url !== lastUrl) {
-      lastUrl = url;
-      onUrlChange(url);
-    }
-  }).observe(document, { subtree: true, childList: true });
-
+  createUrlWatcher(onUrlChange);
   onUrlChange(window.location.href);
 
   function visualDebug(yPos, color = "red") {
