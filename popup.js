@@ -23,6 +23,23 @@ const handleSave = () => {
   });
 };
 
+const handleResetSave = () => {
+  return chrome.storage.local.set({
+    iconSize: "80",
+    moveDelay: 500,
+    scrolling: { strategy: "top", behavior: "smooth" },
+  });
+};
+
+const handleResetButtonPosition = () => {
+  return chrome.storage.local.set({
+    arrowPosition: {
+      x: `calc(100% - ${document.getElementById("iconSize").value}px - 25px)`,
+      y: "50vh",
+    },
+  });
+};
+
 const handleConfirmation = () => {
   if (document.querySelector(".confirmation"))
     document.removeChild(document.querySelector(".confirmation"));
@@ -45,4 +62,14 @@ document.getElementById("saveOptions").onclick = async () => {
   await handleSave();
   handleConfirmation();
   closePopupDelayed();
+};
+
+document.getElementById("resetOptions").onclick = async () => {
+  await handleResetSave();
+  handleConfirmation();
+  closePopupDelayed();
+};
+
+document.getElementById("resetPosition").onclick = async () => {
+  await handleResetButtonPosition();
 };
