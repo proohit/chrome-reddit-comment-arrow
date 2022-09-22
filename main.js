@@ -81,14 +81,30 @@ import { debounce, debug } from "./utils";
     const elementDrag = (e) => {
       e = e || window.event;
       e.preventDefault();
-      // calculate the new cursor position:
       previousCursorX = currentCursorX - e.clientX;
       previousCursorY = currentCursorY - e.clientY;
       currentCursorX = e.clientX;
       currentCursorY = e.clientY;
-      // set the element's new position:
-      const newElementX = el.offsetLeft - previousCursorX;
-      const newElementY = el.offsetTop - previousCursorY;
+
+      let newElementX = el.offsetLeft - previousCursorX;
+      let newElementY = el.offsetTop - previousCursorY;
+
+      const screenWidth = window.visualViewport.width;
+      const screenHeight = window.visualViewport.height;
+      const iconSizeNumber = Number(iconSize);
+      if (newElementX + iconSizeNumber >= screenWidth) {
+        newElementX = screenWidth - iconSizeNumber;
+      }
+      if (newElementX <= 0) {
+        newElementX = 0;
+      }
+      if (newElementY + iconSizeNumber >= screenHeight) {
+        newElementY = screenHeight - iconSizeNumber;
+      }
+      if (newElementY <= 0) {
+        newElementY = 0;
+      }
+
       el.style.top = newElementY + "px";
       el.style.left = newElementX + "px";
     };
