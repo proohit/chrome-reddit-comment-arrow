@@ -103,6 +103,7 @@ import { debounce, debug } from "./utils";
       document.onmousemove = null;
 
       if (mouseDownIntention === "mouseup") {
+        el.style.cursor = "pointer";
         chrome.storage.local.set({
           arrowPosition: { x: el.style.left, y: el.style.top },
         });
@@ -112,6 +113,7 @@ import { debounce, debug } from "./utils";
     const dragMouseDown = (e) => {
       e.preventDefault();
       intentionTimeout = setTimeout(() => {
+        el.style.cursor = "move";
         mouseDownIntention = "mouseup";
         debug("dragMouseDown > intentionTimeout", { mouseDownIntention });
         // call a function whenever the cursor moves:
