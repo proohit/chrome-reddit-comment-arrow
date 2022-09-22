@@ -1,59 +1,12 @@
-const getAllComments = () =>
-  [...document.querySelectorAll(".Comment")].map(
-    (comment) => comment.parentNode
-  );
-
-const getAllTopLevelComments = () => {
-  const allComments = getAllComments();
-  return allComments.filter((comment) => {
-    const rawPadding = comment.style.paddingLeft;
-    const padding = Number(rawPadding.replace("px", ""));
-    return padding <= 16;
-  });
-};
-
-const debug = (...data) => {
-  console.debug("[REDDIT-COMMENT-ARROW]", data);
-};
-
-const getButton = () => document.querySelector(".draggable-btn");
-
-const getButtonImage = () => {
-  const button = getButton();
-  if (!button) return null;
-  return button.querySelector("img");
-};
-
-const getOverlayPostScrollContainer = () => {
-  return document.querySelector("#overlayScrollContainer");
-};
-
-const isPostOverlay = () => {
-  return getOverlayPostScrollContainer() !== null;
-};
-
-const getOverlayPostScrollContainerHeaderHeight = () => {
-  if (isPostOverlay()) {
-    const overlayPostScrollContainer = getOverlayPostScrollContainer();
-    for (const child of overlayPostScrollContainer.children) {
-      if (getComputedStyle(child).position === "sticky") {
-        return child.getBoundingClientRect().height;
-      }
-    }
-    return 0;
-  }
-  return 0;
-};
-
-const debounce = (func, timeout = 300) => {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func.apply(this, args);
-    }, timeout);
-  };
-};
+import { getAllTopLevelComments } from "./comments";
+import {
+  getButton,
+  getButtonImage,
+  getOverlayPostScrollContainer,
+  getOverlayPostScrollContainerHeaderHeight,
+  isPostOverlay,
+} from "./ui";
+import { debounce, debug } from "./utils";
 
 (async () => {
   // Option variables

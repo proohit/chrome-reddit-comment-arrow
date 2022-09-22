@@ -1,0 +1,22 @@
+{
+  "name": "chrome-reddit-comment-arrow",
+  "version": "1.0.7",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup main.js --file content.js --format iife"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/proohit/chrome-reddit-comment-arrow.git"
+  },
+  "author": "proohit <direnc99@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/proohit/chrome-reddit-comment-arrow/issues"
+  },
+  "homepage": "https://github.com/proohit/chrome-reddit-comment-arrow#readme",
+  "devDependencies": {
+    "rollup": "^2.79.1"
+  }
+}
