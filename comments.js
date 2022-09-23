@@ -4,6 +4,7 @@ import {
   headerHeight,
   isPostOverlay,
 } from "./ui";
+import { debounce, debug } from "./utils";
 
 export const getAllComments = () =>
   [...document.querySelectorAll(".Comment")].map(
@@ -36,6 +37,15 @@ export const findNextComment = (scrollingOptions, topLevelComments) => {
     return findNextCommentNearestToCenter(topLevelComments);
   }
 };
+
+export const createCommentWatcher = (onNewCommentsAvailable) =>
+  new MutationObserver(
+    debounce(() => {
+      const newTopLevelComments = getAllTopLevelComments();
+      onNewCommentsAvailable(newTopLevelComments);
+      debug("dom changed, reloading top level comments", newTopLevelComments);
+    }, 200)
+  );
 
 const scrollToCommentAtTop = (comment, scrollingOptions) => {
   let yScrollPosition = comment.getBoundingClientRect().y - headerHeight;

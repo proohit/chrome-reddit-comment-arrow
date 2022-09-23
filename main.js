@@ -1,14 +1,15 @@
 import {
+  createCommentWatcher,
   findNextComment,
-  getAllTopLevelComments,
   scrollToComment,
 } from "./comments";
 import state from "./state";
 import { applyStyles, dragElement, getButton, getButtonImage } from "./ui";
 import { createUrlWatcher, isCommentsPage } from "./url";
-import { debounce, debug } from "./utils";
+import { debug } from "./utils";
 
 (async () => {
+  // Globals
   await state.storage.loadFromChromeStorage();
   state.storage.registerChangeListener(() => {
     if (isCommentsPage(window.location.href)) {
@@ -16,6 +17,14 @@ import { debounce, debug } from "./utils";
     }
   });
 
+  const bodyMutationObserver = createCommentWatcher((newTopLevelComments) => {
+    if (newTopLevelComments.length !== state.topLevelComments.length) {
+      state.topLevelComments = newTopLevelComments;
+      applyStyles(getButton(), getButtonImage(), state);
+    } else {
+      state.topLevelComments = newTopLevelComments;
+    }
+  });
   const findAndScrollToNextComment = (e) => {
     e.preventDefault();
     if (state.mouseDownIntention === "mouseup") {
@@ -31,22 +40,7 @@ import { debounce, debug } from "./utils";
     debug(nextComment);
   };
 
-  let bodyMutationObserver = new MutationObserver(
-    debounce(() => {
-      const newTopLevelComments = getAllTopLevelComments();
-      if (newTopLevelComments.length !== state.topLevelComments.length) {
-        state.topLevelComments = newTopLevelComments;
-        applyStyles(getButton(), getButtonImage(), state);
-      } else {
-        state.topLevelComments = newTopLevelComments;
-      }
-      debug(
-        "dom changed, reloading top level comments",
-        state.topLevelComments
-      );
-    }, 200)
-  );
-
+  // Ui handling
   const constructUi = async () => {
     if (!isCommentsPage(window.location.href)) {
       return;
