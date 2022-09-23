@@ -111,6 +111,7 @@ export const dragElement = (el, state) => {
 };
 
 export const applyStyles = (btn, img, state) => {
+  if (!btn || !img) return;
   debug("locally saved arrow position", state.storage.arrowPosition);
   btn.className = "draggable-btn";
   btn.style.top = state.storage.arrowPosition.y;
