@@ -3,41 +3,19 @@ import {
   getAllTopLevelComments,
   scrollToComment,
 } from "./comments";
+import { Storage } from "./storage";
 import { getButton, getButtonImage } from "./ui";
 import { createUrlWatcher, isCommentsPage } from "./url";
 import { debounce, debug } from "./utils";
 
 (async () => {
-  // Option variables
-  let moveDelay;
-  let iconSize;
-  let scrolling;
-
-  const res = await chrome.storage.local.get({
-    moveDelay: 500,
-    iconSize: 80,
-    scrolling: { strategy: "top", behavior: "smooth" },
-  });
-
-  chrome.storage.local.onChanged.addListener((changes) => {
-    debug("changes in storage", changes);
-    if (changes.moveDelay) {
-      moveDelay = changes.moveDelay.newValue;
-    }
-    if (changes.iconSize) {
-      iconSize = changes.iconSize.newValue;
-    }
-    if (changes.scrolling) {
-      scrolling = changes.scrolling.newValue;
-    }
+  const storage = new Storage();
+  await storage.loadFromChromeStorage();
+  storage.registerChangeListener(() => {
     if (isCommentsPage(window.location.href)) {
       applyStyles(getButton(), getButtonImage());
     }
   });
-
-  moveDelay = res.moveDelay;
-  iconSize = res.iconSize;
-  scrolling = res.scrolling;
 
   // Globals
 
@@ -46,19 +24,13 @@ import { debounce, debug } from "./utils";
   let mouseDownIntention = "click";
 
   const applyStyles = (btn, img) => {
+    debug("locally saved arrow position", storage.arrowPosition);
     btn.className = "draggable-btn";
-    chrome.storage.local.get(
-      // default values
-      { arrowPosition: { x: `calc(100% - ${iconSize}px - 25px)`, y: "50vh" } },
-      ({ arrowPosition }) => {
-        debug("locally saved arrow position", arrowPosition);
-        btn.style.top = arrowPosition.y;
-        btn.style.left = arrowPosition.x;
-      }
-    );
+    btn.style.top = storage.arrowPosition.y;
+    btn.style.left = storage.arrowPosition.x;
 
-    img.style.width = `${iconSize}px`;
-    img.style.height = `${iconSize}px`;
+    img.style.width = `${storage.iconSize}px`;
+    img.style.height = `${storage.iconSize}px`;
 
     if (topLevelComments.length <= 0) {
       btn.classList.add("disabled");
@@ -91,7 +63,7 @@ import { debounce, debug } from "./utils";
 
       const screenWidth = window.visualViewport.width;
       const screenHeight = window.visualViewport.height;
-      const iconSizeNumber = Number(iconSize);
+      const iconSizeNumber = Number(storage.iconSize);
       if (newElementX + iconSizeNumber >= screenWidth) {
         newElementX = screenWidth - iconSizeNumber;
       }
@@ -120,8 +92,11 @@ import { debounce, debug } from "./utils";
 
       if (mouseDownIntention === "mouseup") {
         el.style.cursor = "pointer";
-        chrome.storage.local.set({
-          arrowPosition: { x: el.style.left, y: el.style.top },
+        storage.saveToChromeStorage({
+          arrowPosition: {
+            x: el.style.left,
+            y: el.style.top,
+          },
         });
       }
     };
@@ -134,7 +109,7 @@ import { debounce, debug } from "./utils";
         debug("dragMouseDown > intentionTimeout", { mouseDownIntention });
         // call a function whenever the cursor moves:
         document.onmousemove = elementDrag;
-      }, moveDelay);
+      }, storage.moveDelay);
       e = e || window.event;
       // get the mouse cursor position at startup:
       currentCursorX = e.clientX;
@@ -152,8 +127,8 @@ import { debounce, debug } from "./utils";
       mouseDownIntention = "click";
       return;
     }
-    const nextComment = findNextComment(scrolling, topLevelComments);
-    scrollToComment(nextComment, scrolling);
+    const nextComment = findNextComment(storage.scrolling, topLevelComments);
+    scrollToComment(nextComment, storage.scrolling);
     debug(nextComment);
   };
 
