@@ -2,6 +2,7 @@
   "name": "chrome-reddit-comment-arrow",
   "scripts": {
     "build": "rollup main.js --file content.js --format iife",
+    "dev": "npm run build -- --watch",
     "zip": "bestzip extension.zip manifest.json content.js button.css popup.html popup.js images/ README.md LICENSE.md",
     "package": "npm run build && npm run zip && mv extension.zip --"
   },
