@@ -23,12 +23,17 @@ const handleSave = () => {
   });
 };
 
-const handleResetSave = () => {
-  return chrome.storage.local.set({
+const handleResetSave = async () => {
+  await chrome.storage.local.set({
     iconSize: "80",
     moveDelay: 500,
     scrolling: { strategy: "top", behavior: "smooth" },
   });
+
+  document.getElementById("iconSize").value = "80";
+  document.getElementById("moveDelay").value = 500;
+  document.getElementById("scrollingStrategy").value = "top";
+  document.getElementById("scrollingBehavior").value = "smooth";
 };
 
 const handleResetButtonPosition = () => {
