@@ -25,7 +25,11 @@ import { debug } from "./utils";
       state.topLevelComments = newTopLevelComments;
     }
   });
-  const findAndScrollToNextComment = (e) => {
+
+  createUrlWatcher(onUrlChange, { initial: true });
+
+  // Click handler
+  function findAndScrollToNextComment(e) {
     e.preventDefault();
     if (state.mouseDownIntention === "mouseup") {
       debug("scrollToNextComment", state.mouseDownIntention);
@@ -38,10 +42,10 @@ import { debug } from "./utils";
     );
     scrollToComment(nextComment, state.storage.scrolling);
     debug(nextComment);
-  };
+  }
 
   // Ui handling
-  const constructUi = async () => {
+  function constructUi() {
     if (!isCommentsPage(window.location.href)) {
       return;
     }
@@ -64,18 +68,18 @@ import { debug } from "./utils";
 
     btn.appendChild(img);
     document.body.appendChild(btn);
-  };
+  }
 
-  const deconstructUi = () => {
+  function deconstructUi() {
     debug("deconstructing ui");
     const btn = document.querySelector(".draggable-btn");
     if (btn) {
       document.body.removeChild(btn);
     }
     bodyMutationObserver.disconnect();
-  };
+  }
 
-  const onUrlChange = (newUrl) => {
+  function onUrlChange(newUrl) {
     if (isCommentsPage(newUrl)) {
       debug("Url changed and is comments page");
       constructUi();
@@ -83,10 +87,7 @@ import { debug } from "./utils";
       debug("Url changed and is no comments page");
       deconstructUi();
     }
-  };
-
-  createUrlWatcher(onUrlChange);
-  onUrlChange(window.location.href);
+  }
 
   function visualDebug(yPos, color = "red") {
     const vis = document.createElement("hr");

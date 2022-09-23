@@ -7,7 +7,7 @@ export const isCommentsPage = (location) => {
   return redditUrlPattern.test(location);
 };
 
-export const createUrlWatcher = (onUrlChange) => {
+export const createUrlWatcher = (onUrlChange, options = { initial: false }) => {
   let lastUrl = location.href;
   const urlWatcher = new MutationObserver(() => {
     const url = location.href;
@@ -17,5 +17,9 @@ export const createUrlWatcher = (onUrlChange) => {
     }
   });
   urlWatcher.observe(document, { subtree: true, childList: true });
+
+  if (options.initial) {
+    onUrlChange(window.location.href);
+  }
   return urlWatcher;
 };
