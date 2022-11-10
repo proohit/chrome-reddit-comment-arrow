@@ -4,7 +4,7 @@ const redditUrlPattern = new URLPattern(
 );
 
 export const isCommentsPage = (location) => {
-  return redditUrlPattern.test(location);
+  return redditUrlPattern.test(location.split("?")[0]);
 };
 
 export const createUrlWatcher = (onUrlChange, options = { initial: false }) => {
