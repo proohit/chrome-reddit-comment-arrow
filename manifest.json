@@ -1,7 +1,7 @@
 {
   "name": "Reddit Comment Arrow",
   "description": "The loved arrow in the reddit comment section to skip to the next top level comment",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "manifest_version": 3,
   "permissions": [
     "storage"
