@@ -1,3 +1,15 @@
+const getMessage = (message) => {
+  return chrome.i18n.getMessage(message);
+};
+
+const localizeHtmlPage = () => {
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    element.innerHTML = getMessage(element.getAttribute("data-i18n"));
+  });
+};
+
+localizeHtmlPage();
+
 chrome.storage.local.get(
   {
     iconSize: "80",
@@ -50,8 +62,7 @@ const handleConfirmation = () => {
     document.removeChild(document.querySelector(".confirmation"));
 
   const confirmation = document.createElement("p");
-  confirmation.textContent =
-    "Options saved and will be applied the next time the button is rendered.";
+  confirmation.textContent = getMessage("popup_save_confirmation");
   confirmation.classList.add("confirmation");
   document.querySelector(".options").appendChild(confirmation);
   window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });

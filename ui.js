@@ -122,7 +122,7 @@ export const applyStyles = (btn, img, state) => {
 
   if (state.topLevelComments.length <= 0) {
     btn.classList.add("disabled");
-    btn.title = "Loading top level comments...";
+    btn.title = chrome.i18n.getMessage("extension_comments_loading");
   } else {
     btn.classList.remove("disabled");
     btn.title = "";

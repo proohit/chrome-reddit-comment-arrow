@@ -1,0 +1,66 @@
+{
+    "extension_name": {
+        "message": "Reddit Kommentarpfeil",
+        "description": "Name der Erweiterung"
+    },
+    "extension_description": {
+        "message": "Die geliebte Funktion um zum nächsten Kommentar eines Posts zu springen nun auch in Chrome!",
+        "description": "Beschreibung der Erweiterung"
+    },
+    "options_title": {
+        "message": "Optionen",
+        "description": "Titel der Optionen-Seite"
+    },
+    "popup_button_size_label": {
+        "message": "Knopfgröße (in Pixeln)",
+        "description": "Label der Knopfgrößenoption"
+    },
+    "popup_move_delay_label": {
+        "message": "Verzögerung zum positionieren des Knopfes (in Millisekunden)",
+        "description": "Label der Verzögerungsoption"
+    },
+    "popup_scrolling_strategy_label": {
+        "message": "Position des nächsten Kommentars nach dem Scrollen",
+        "description": "Label der Scrollstrategieoption"
+    },
+    "popup_scrolling_strategy_option_top": {
+        "message": "Oben",
+        "description": "Label für die Option 'Oben' der Scrollstrategieoption"
+    },
+    "popup_scrolling_strategy_option_center": {
+        "message": "Zentriert",
+        "description": "Label für die Option 'Zentriert' der Scrollstrategieoption"
+    },
+    "popup_scrolling_behavior_label": {
+        "message": "Verhalten beim Scrollen",
+        "description": "Label der Scrollverhaltenoption"
+    },
+    "popup_scrolling_behavior_option_smooth": {
+        "message": "Weich",
+        "description": "Label für die Option 'Weich' der Scrollverhaltenoption"
+    },
+    "popup_scrolling_behavior_option_instant": {
+        "message": "Sofort",
+        "description": "Label für die Option 'Sofort' der Scrollverhaltenoption"
+    },
+    "popup_save_label": {
+        "message": "Speichern",
+        "description": "Label des Speichernknopfes"
+    },
+    "popup_reset_options_label": {
+        "message": "Standardeinstellungen wiederherstellen",
+        "description": "Label des Zurücksetzenknopfes"
+    },
+    "popup_reset_position_label": {
+        "message": "Position zurücksetzen",
+        "description": "Label des Zurücksetzenknopfes für den Knopf"
+    },
+    "popup_save_confirmation": {
+        "message": "Einstellungen gespeichert. Sie werden beim nächsten Anzeigen angewandt.",
+        "description": "Bestätigung nach dem Speichern der Einstellungen"
+    },
+    "extension_comments_loading": {
+        "message": "Lade Kommentare...",
+        "description": "Anzeige, wenn die Kommentare noch geladen werden"
+    }
+}

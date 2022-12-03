@@ -1,0 +1,66 @@
+{
+    "extension_name": {
+        "message": "Reddit Comment Arrow",
+        "description": "Name of the extension."
+    },
+    "extension_description": {
+        "message": "The loved arrow in the reddit comment section to skip to the next top level comment",
+        "description": "Description of the extension."
+    },
+    "options_title": {
+        "message": "Options",
+        "description": "Title of the options page."
+    },
+    "popup_button_size_label": {
+        "message": "Button size (in pixels)",
+        "description": "Label for the button size setting."
+    },
+    "popup_move_delay_label": {
+        "message": "Delay until button can be moved (in miliseconds)",
+        "description": "Label for the move delay setting."
+    },
+    "popup_scrolling_strategy_label": {
+        "message": "Position where the next comment will be at",
+        "description": "Label for the scrolling strategy setting."
+    },
+    "popup_scrolling_strategy_option_top": {
+        "message": "Top",
+        "description": "Option top for the scrolling strategy setting."
+    },
+    "popup_scrolling_strategy_option_center": {
+        "message": "Center",
+        "description": "Option center for the scrolling strategy setting."
+    },
+    "popup_scrolling_behavior_label": {
+        "message": "How the scrolling should behave",
+        "description": "Label for the scrolling behavior setting."
+    },
+    "popup_scrolling_behavior_option_smooth": {
+        "message": "Smooth",
+        "description": "Option smooth for the scrolling behavior setting."
+    },
+    "popup_scrolling_behavior_option_instant": {
+        "message": "Instant",
+        "description": "Option instant for the scrolling behavior setting."
+    },
+    "popup_save_label": {
+        "message": "Save",
+        "description": "Label for the save button."
+    },
+    "popup_reset_options_label": {
+        "message": "Reset to defaults",
+        "description": "Label for the reset button."
+    },
+    "popup_reset_position_label": {
+        "message": "Reset button position",
+        "description": "Label for the reset position button."
+    },
+    "popup_save_confirmation": {
+        "message": "Options saved and will be applied the next time the button is rendered.",
+        "description": "Confirmation message after saving the options."
+    },
+    "extension_comments_loading": {
+        "message": "Loading top level comments...",
+        "description": "Message shown when the comments are loading."
+    }
+}

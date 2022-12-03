@@ -73,36 +73,52 @@
   <body>
     <div class="header">
       <img src="./images/Logo.svg" alt="logo" />
-      <h1>Reddit Comment Arrow</h1>
+      <h1 data-i18n="extension_name"></h1>
     </div>
     <div class="options">
-      <h2>Options</h2>
+      <h2 data-i18n="options_title"></h2>
 
-      <label for="iconSize">Button size (in pixels)</label>
+      <label for="iconSize" data-i18n="popup_button_size_label"></label>
       <input id="iconSize" type="number" />
 
-      <label for="moveDelay"
-        >Delay until button can be moved (in miliseconds)
-      </label>
+      <label for="moveDelay" data-i18n="popup_move_delay_label"> </label>
       <input id="moveDelay" type="number" />
 
-      <label for="scrollingStrategy"
-        >Position where the next comment will be at
-      </label>
+      <label
+        for="scrollingStrategy"
+        data-i18n="popup_scrolling_strategy_label"
+      ></label>
+
       <select id="scrollingStrategy">
-        <option value="top">Top</option>
-        <option value="center">Center</option>
+        <option
+          value="top"
+          data-i18n="popup_scrolling_strategy_option_top"
+        ></option>
+        <option
+          value="center"
+          data-i18n="popup_scrolling_strategy_option_center"
+        ></option>
       </select>
 
-      <label for="scrollingBehavior">How the scrolling should behave </label>
+      <label for="scrollingBehavior" data-i18n="popup_scrolling_behavior_label">
+      </label>
       <select id="scrollingBehavior">
-        <option value="smooth">Smooth</option>
-        <option value="auto">Normal</option>
+        <option
+          value="smooth"
+          data-i18n="popup_scrolling_behavior_option_smooth"
+        ></option>
+        <option
+          value="auto"
+          data-i18n="popup_scrolling_behavior_option_instant"
+        ></option>
       </select>
 
-      <button id="saveOptions">Save</button>
-      <button id="resetOptions">Reset to defaults</button>
-      <button id="resetPosition">Reset button position</button>
+      <button id="saveOptions" data-i18n="popup_save_label"></button>
+      <button id="resetOptions" data-i18n="popup_reset_options_label"></button>
+      <button
+        id="resetPosition"
+        data-i18n="popup_reset_position_label"
+      ></button>
     </div>
     <script src="./popup.js"></script>
   </body>
