@@ -14,12 +14,17 @@ chrome.storage.local.get(
   {
     iconSize: "80",
     moveDelay: 500,
-    scrolling: { strategy: "top", behavior: "smooth" },
+    scrolling: {
+      strategy: "top",
+      behavior: "smooth",
+      scrollTo: "topLevelComment",
+    },
   },
   (res) => {
     document.getElementById("iconSize").value = res.iconSize;
     document.getElementById("moveDelay").value = res.moveDelay;
     document.getElementById("scrollingStrategy").value = res.scrolling.strategy;
+    document.getElementById("scrollTo").value = res.scrolling.scrollTo;
     document.getElementById("scrollingBehavior").value = res.scrolling.behavior;
   }
 );
@@ -31,6 +36,7 @@ const handleSave = () => {
     scrolling: {
       strategy: document.getElementById("scrollingStrategy").value,
       behavior: document.getElementById("scrollingBehavior").value,
+      scrollTo: document.getElementById("scrollTo").value,
     },
   });
 };
@@ -46,6 +52,7 @@ const handleResetSave = async () => {
   document.getElementById("moveDelay").value = 500;
   document.getElementById("scrollingStrategy").value = "top";
   document.getElementById("scrollingBehavior").value = "smooth";
+  document.getElementById("scrollTo").value = "topLevelComment";
 };
 
 const handleResetButtonPosition = () => {

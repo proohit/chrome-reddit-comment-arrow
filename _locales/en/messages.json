@@ -43,6 +43,18 @@
         "message": "Instant",
         "description": "Option instant for the scrolling behavior setting."
     },
+    "popup_scrolling_scroll_to_label": {
+        "message": "Scroll target",
+        "description": "Label for the scroll-to setting."
+    },
+    "popup_scrolling_scroll_to_option_topLevelComment": {
+        "message": "Next top level comment",
+        "description": "Option next top level comment for the scroll-to setting."
+    },
+    "popup_scrolling_scroll_to_option_nextComment": {
+        "message": "Next comment",
+        "description": "Option next comment for the scroll-to setting."
+    },
     "popup_save_label": {
         "message": "Save",
         "description": "Label for the save button."

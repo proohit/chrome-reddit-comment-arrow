@@ -8,7 +8,11 @@ const DEFAULT_ARROW_POSITION = (iconSize) => ({
 const DEFAULT_OPTIONS = {
   moveDelay: 500,
   iconSize: 80,
-  scrolling: { strategy: "top", behavior: "smooth" },
+  scrolling: {
+    strategy: "top",
+    behavior: "smooth",
+    scrollTo: "topLevelComment",
+  },
   arrowPosition: DEFAULT_ARROW_POSITION(80),
 };
 

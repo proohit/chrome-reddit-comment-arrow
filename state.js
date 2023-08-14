@@ -24,4 +24,12 @@ export default {
   set topLevelComments(value) {
     this._topLevelComments = value;
   },
+
+  _comments: [],
+  get comments() {
+    return this._comments;
+  },
+  set comments(value) {
+    this._comments = value;
+  },
 };

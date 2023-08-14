@@ -42,7 +42,8 @@ export const createCommentWatcher = (onNewCommentsAvailable) =>
   new MutationObserver(
     debounce(() => {
       const newTopLevelComments = getAllTopLevelComments();
-      onNewCommentsAvailable(newTopLevelComments);
+      const allComments = getAllComments();
+      onNewCommentsAvailable(allComments, newTopLevelComments);
       debug("dom changed, reloading top level comments", newTopLevelComments);
     }, 200)
   );

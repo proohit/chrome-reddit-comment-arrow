@@ -17,14 +17,18 @@ import { debug } from "./utils";
     }
   });
 
-  const bodyMutationObserver = createCommentWatcher((newTopLevelComments) => {
-    if (newTopLevelComments.length !== state.topLevelComments.length) {
-      state.topLevelComments = newTopLevelComments;
-      applyStyles(getButton(), getButtonImage(), state);
-    } else {
-      state.topLevelComments = newTopLevelComments;
+  const bodyMutationObserver = createCommentWatcher(
+    (allComments, newTopLevelComments) => {
+      if (newTopLevelComments.length !== state.topLevelComments.length) {
+        state.topLevelComments = newTopLevelComments;
+        state.comments = allComments;
+        applyStyles(getButton(), getButtonImage(), state);
+      } else {
+        state.topLevelComments = newTopLevelComments;
+        state.comments = allComments;
+      }
     }
-  });
+  );
 
   createUrlWatcher(onUrlChange, { initial: true });
 
@@ -36,10 +40,16 @@ import { debug } from "./utils";
       state.mouseDownIntention = "click";
       return;
     }
-    const nextComment = findNextComment(
-      state.storage.scrolling,
-      state.topLevelComments
-    );
+    let nextComment = null;
+    if (state.storage.scrolling.scrollTo === "topLevelComment") {
+      nextComment = findNextComment(
+        state.storage.scrolling,
+        state.topLevelComments
+      );
+    } else if (state.storage.scrolling.scrollTo === "nextComment") {
+      nextComment = findNextComment(state.storage.scrolling, state.comments);
+    }
+
     scrollToComment(nextComment, state.storage.scrolling);
     debug(nextComment);
   }

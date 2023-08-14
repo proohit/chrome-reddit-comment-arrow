@@ -43,6 +43,18 @@
         "message": "Sofort",
         "description": "Label für die Option 'Sofort' der Scrollverhaltenoption"
     },
+    "popup_scrolling_scroll_to_label": {
+        "message": "Scrollziel",
+        "description": "Label der Scroll-To-Option"
+    },
+    "popup_scrolling_scroll_to_option_topLevelComment": {
+        "message": "Nächster Top Level Kommentar",
+        "description": "Label für die Option 'Nächster Top Level Kommentar' der Scroll-To-Option"
+    },
+    "popup_scrolling_scroll_to_option_nextComment": {
+        "message": "Nächster Kommentar",
+        "description": "Label für die Option 'Nächster Kommentar' der Scroll-To-Option"
+    },
     "popup_save_label": {
         "message": "Speichern",
         "description": "Label des Speichernknopfes"
