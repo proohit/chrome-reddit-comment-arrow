@@ -116,9 +116,11 @@ export const applyStyles = (btn, img, state) => {
   btn.className = "draggable-btn";
   btn.style.top = state.storage.arrowPosition.y;
   btn.style.left = state.storage.arrowPosition.x;
+  btn.style.width = `${state.storage.iconSize}px`;
+  btn.style.height = `${state.storage.iconSize}px`;
 
-  img.style.width = `${state.storage.iconSize}px`;
-  img.style.height = `${state.storage.iconSize}px`;
+  img.style.height = "100%";
+  img.style.width = "100%";
 
   if (state.topLevelComments.length <= 0) {
     btn.classList.add("disabled");
