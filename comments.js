@@ -6,14 +6,18 @@ import {
 } from "./ui";
 import { debounce, debug } from "./utils";
 
-export const getAllComments = () => [
-  ...document.querySelectorAll("shreddit-comment"),
-];
+export const getAllComments = () =>
+  [...document.querySelectorAll(".Comment")].map(
+    (comment) => comment.parentNode
+  );
 
 export const getAllTopLevelComments = () => {
-  return [
-    ...document.querySelectorAll("shreddit-comment-tree > shreddit-comment"),
-  ];
+  const allComments = getAllComments();
+  return allComments.filter((comment) => {
+    const rawPadding = comment.style.paddingLeft;
+    const padding = Number(rawPadding.replace("px", ""));
+    return padding <= 16;
+  });
 };
 
 export const scrollToComment = (comment, scrollingOptions) => {
