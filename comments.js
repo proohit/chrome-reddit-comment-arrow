@@ -6,13 +6,23 @@ import {
 } from "./ui";
 import { debounce, debug } from "./utils";
 
-export const getAllComments = () =>
-  [...document.querySelectorAll(".Comment")].map(
+export const getAllComments = () => {
+  const commentsNewArch = [...document.querySelectorAll("shreddit-comment")];
+  if (commentsNewArch.length > 0) return commentsNewArch;
+
+  return [...document.querySelectorAll(".Comment")].map(
     (comment) => comment.parentNode
   );
+};
 
 export const getAllTopLevelComments = () => {
+  const topLevelCommentsNewArch = [
+    ...document.querySelectorAll("shreddit-comment-tree > shreddit-comment"),
+  ];
+  if (topLevelCommentsNewArch.length > 0) return topLevelCommentsNewArch;
+
   const allComments = getAllComments();
+
   return allComments.filter((comment) => {
     const rawPadding = comment.style.paddingLeft;
     const padding = Number(rawPadding.replace("px", ""));
