@@ -11,16 +11,16 @@ export default {
     format: "iife",
   },
   plugins: [
+    typescript({
+      tsconfig: "tsconfig.json",
+    }),
+    commonjs(),
     resolve({
       extensions: [".js", ".jsx", ".ts", ".tsx"],
     }),
-    commonjs(),
     replace({
       preventAssignment: false,
       "process.env.NODE_ENV": `"${process.env.ENV}"`,
-    }),
-    typescript({
-      tsconfig: "tsconfig.json",
     }),
     terser(),
   ],
