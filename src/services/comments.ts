@@ -1,4 +1,5 @@
 import { debounce, debug } from "../helpers/utils";
+import { ScrollingOptions } from "../interfaces/scrolling-options.interface";
 import {
   getOverlayPostScrollContainer,
   getOverlayPostScrollContainerHeaderHeight,
@@ -6,13 +7,15 @@ import {
   isPostOverlay,
 } from "./ui";
 
-export const getAllComments = () => {
-  const commentsNewArch = [...document.querySelectorAll("shreddit-comment")];
+export const getAllComments = (): HTMLElement[] => {
+  const commentsNewArch = [
+    ...document.querySelectorAll("shreddit-comment"),
+  ] as HTMLElement[];
   if (commentsNewArch.length > 0) return commentsNewArch;
 
-  return [...document.querySelectorAll(".Comment")].map(
-    (comment) => comment.parentNode
-  );
+  return [...document.querySelectorAll(".Comment")]
+    .map((comment) => comment.parentNode as HTMLElement)
+    .filter((comment) => !!comment);
 };
 
 export const getAllTopLevelComments = () => {
@@ -30,7 +33,10 @@ export const getAllTopLevelComments = () => {
   });
 };
 
-export const scrollToComment = (comment, scrollingOptions) => {
+export const scrollToComment = (
+  comment: HTMLElement,
+  scrollingOptions: ScrollingOptions
+) => {
   if (!comment) return;
   if (scrollingOptions.strategy === "center") {
     scrollToCommentAtCenter(comment, scrollingOptions);
@@ -39,13 +45,18 @@ export const scrollToComment = (comment, scrollingOptions) => {
   }
 };
 
-export const findNextComment = (scrollingOptions, topLevelComments) => {
+export const findNextComment = (
+  scrollingOptions: ScrollingOptions,
+  topLevelComments: HTMLElement[]
+) => {
   const strategy = scrollingOptions.strategy;
   if (strategy === "top") {
     return findNextCommentNearestToTop(topLevelComments);
   } else if (strategy === "center") {
     return findNextCommentNearestToCenter(topLevelComments);
   }
+
+  return null;
 };
 
 export const createCommentWatcher = (onNewCommentsAvailable) =>
@@ -58,15 +69,18 @@ export const createCommentWatcher = (onNewCommentsAvailable) =>
     }, 200)
   );
 
-const scrollToCommentAtTop = (comment, scrollingOptions) => {
+const scrollToCommentAtTop = (
+  comment: HTMLElement,
+  scrollingOptions: ScrollingOptions
+) => {
   let yScrollPosition = comment.getBoundingClientRect().y - headerHeight;
   if (isPostOverlay()) {
     const overlayPostScrollContainer = getOverlayPostScrollContainer();
     yScrollPosition =
       yScrollPosition +
-      overlayPostScrollContainer.scrollTop -
+      (overlayPostScrollContainer?.scrollTop ?? 0) -
       getOverlayPostScrollContainerHeaderHeight();
-    overlayPostScrollContainer.scrollTo({
+    overlayPostScrollContainer?.scrollTo({
       left: 0,
       top: yScrollPosition,
       behavior: scrollingOptions.behavior,
@@ -93,7 +107,7 @@ const findNextCommentNearestToCenter = (topLevelComments) => {
   return findNextCommentWith(absoluteYViewportCenter, topLevelComments, 0);
 };
 
-const findNextCommentNearestToTop = (topLevelComments) => {
+const findNextCommentNearestToTop = (topLevelComments: HTMLElement[]) => {
   let absoluteViewportY = window.scrollY + headerHeight;
   let offset = 5;
   if (isPostOverlay()) {
@@ -103,12 +117,12 @@ const findNextCommentNearestToTop = (topLevelComments) => {
 };
 
 const findNextCommentWith = (
-  viewportY,
-  topLevelComments,
-  skippingThreshold
+  viewportY: number,
+  topLevelComments: HTMLElement[],
+  skippingThreshold: number
 ) => {
   let minimumDistance = Infinity; // defaults to high to begin search
-  let minimumDistanceCommentElement = null;
+  let minimumDistanceCommentElement: HTMLElement | null = null;
   for (let commentElement of topLevelComments) {
     const commentElementPos = commentElement.getBoundingClientRect();
     let absoluteYCommentElement = commentElementPos.y + window.scrollY;

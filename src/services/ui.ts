@@ -1,6 +1,5 @@
-export const headerHeight = document
-  .querySelector("header")
-  .getBoundingClientRect().height;
+export const headerHeight =
+  document.querySelector("header")?.getBoundingClientRect().height ?? 0;
 
 export const getButton = () => document.querySelector(".draggable-btn");
 
@@ -20,7 +19,8 @@ export const isPostOverlay = () => {
 
 export const getOverlayPostScrollContainerHeaderHeight = () => {
   if (isPostOverlay()) {
-    const overlayPostScrollContainer = getOverlayPostScrollContainer();
+    const overlayPostScrollContainer =
+      getOverlayPostScrollContainer() as HTMLElement;
     for (const child of overlayPostScrollContainer.children) {
       if (getComputedStyle(child).position === "sticky") {
         return child.getBoundingClientRect().height;

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import Moveable from "react-moveable";
 import { useChromeStorageLocal } from "use-chrome-storage";
 import { debug } from "../helpers/utils";
+import { ScrollingOptions } from "../interfaces/scrolling-options.interface";
 import { findNextComment, scrollToComment } from "../services/comments";
-
 export const DEFAULT_ARROW_POSITION = (iconSize) => ({
   x: `calc(100% - ${iconSize}px - 25px)`,
   y: "50vh",
@@ -16,7 +16,7 @@ export const DEFAULT_OPTIONS = {
     strategy: "top",
     behavior: "smooth",
     scrollTo: "topLevelComment",
-  },
+  } as ScrollingOptions,
   arrowPosition: DEFAULT_ARROW_POSITION(80),
 };
 
@@ -30,7 +30,7 @@ export const ArrowButton = (props) => {
     "iconSize",
     DEFAULT_OPTIONS.iconSize
   );
-  const [scrolling] = useChromeStorageLocal(
+  const [scrolling] = useChromeStorageLocal<ScrollingOptions>(
     "scrolling",
     DEFAULT_OPTIONS.scrolling
   );
@@ -44,21 +44,22 @@ export const ArrowButton = (props) => {
   const findAndScrollToNextComment = (e) => {
     e.preventDefault();
     if (dragging) return;
-    let nextComment = null;
+    let nextComment: HTMLElement | null = null;
     if (scrolling.scrollTo === "topLevelComment") {
       nextComment = findNextComment(scrolling, props.topLevelComments);
     } else if (scrolling.scrollTo === "nextComment") {
       nextComment = findNextComment(scrolling, props.comments);
     }
-
-    scrollToComment(nextComment, scrolling);
+    if (nextComment) {
+      scrollToComment(nextComment, scrolling);
+    }
     debug(nextComment);
   };
 
   const moveButton = (e) => {
     if (dragging) {
-      const screenWidth = window.visualViewport.width;
-      const screenHeight = window.visualViewport.height;
+      const screenWidth = window.visualViewport?.width ?? window.innerWidth;
+      const screenHeight = window.visualViewport?.height ?? window.innerHeight;
       const iconSizeNumber = Number(iconSize);
 
       let newPosition = {
@@ -116,8 +117,8 @@ export const ArrowButton = (props) => {
         onDrag={moveButton}
         onDragStart={startDragTimer}
         onDragEnd={updatePositionAndEndDragging}
-        origin={null}
         hideDefaultLines
+        origin={null}
       />
       <button
         ref={buttonRef}
