@@ -1,10 +1,10 @@
+import { debounce, debug } from "../helpers/utils";
 import {
   getOverlayPostScrollContainer,
   getOverlayPostScrollContainerHeaderHeight,
   headerHeight,
   isPostOverlay,
 } from "./ui";
-import { debounce, debug } from "./utils";
 
 export const getAllComments = () => {
   const commentsNewArch = [...document.querySelectorAll("shreddit-comment")];
