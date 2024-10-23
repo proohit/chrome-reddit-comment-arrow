@@ -64,33 +64,20 @@ const handleResetButtonPosition = () => {
   });
 };
 
-const handleConfirmation = () => {
-  if (document.querySelector(".confirmation"))
-    document.removeChild(document.querySelector(".confirmation"));
-
-  const confirmation = document.createElement("p");
-  confirmation.textContent = getMessage("popup_save_confirmation");
-  confirmation.classList.add("confirmation");
-  document.querySelector(".options").appendChild(confirmation);
-  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-};
-
-const closePopupDelayed = () => {
-  setTimeout(() => {
-    window.close();
-  }, 3000);
+const closePopup = () => {
+  window.close();
 };
 
 document.getElementById("saveOptions").onclick = async () => {
   await handleSave();
-  handleConfirmation();
-  closePopupDelayed();
+
+  closePopup();
 };
 
 document.getElementById("resetOptions").onclick = async () => {
   await handleResetSave();
-  handleConfirmation();
-  closePopupDelayed();
+
+  closePopup();
 };
 
 document.getElementById("resetPosition").onclick = async () => {
