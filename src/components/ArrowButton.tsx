@@ -2,45 +2,22 @@ import React, { FC, MouseEvent, useState } from "react";
 import Moveable, { OnDrag } from "react-moveable";
 import { useChromeStorageLocal } from "use-chrome-storage";
 import CommentArrow from "../../images/Reddit-Comment-Arrow.svg";
+import { DEFAULT_OPTIONS } from "../constants/default-options";
 import { debug } from "../helpers/utils";
 import { ScrollingOptions } from "../interfaces/scrolling-options.interface";
 import { findNextComment, scrollToComment } from "../services/comments";
-type Options = {
-  moveDelay: number;
-  iconSize: number;
-  scrolling: ScrollingOptions;
-  arrowPosition: { x: string; y: string };
-  stroke?: string;
-  fill?: string;
-};
-export const DEFAULT_ARROW_POSITION = (
-  iconSize: number
-): {
-  x: string;
-  y: string;
-} => ({
-  x: `calc(100% - ${iconSize}px - 25px)`,
-  y: "50vh",
-});
 
-export const DEFAULT_OPTIONS: Options = {
-  moveDelay: 500,
-  iconSize: 80,
-  scrolling: {
-    strategy: "top",
-    behavior: "smooth",
-    scrollTo: "topLevelComment",
-  } as ScrollingOptions,
-  arrowPosition: DEFAULT_ARROW_POSITION(80),
-  stroke: undefined,
-  fill: undefined,
-};
-
-export const ArrowButton: FC<{
+type ArrowButtonProps = {
   topLevelComments: HTMLElement[];
   comments: HTMLElement[];
-}> = (props) => {
-  const delayTimer = React.useRef(null);
+};
+
+export const ArrowButton: FC<ArrowButtonProps> = (props) => {
+  const buttonRef = React.useRef(null);
+
+  const dragDelayTimer = React.useRef(null);
+  const [dragging, setDragging] = useState(false);
+
   const [moveDelay] = useChromeStorageLocal(
     "moveDelay",
     DEFAULT_OPTIONS.moveDelay
@@ -65,9 +42,6 @@ export const ArrowButton: FC<{
     "fill",
     DEFAULT_OPTIONS.fill
   );
-
-  const [dragging, setDragging] = useState(false);
-  const buttonRef = React.useRef(null);
 
   const findAndScrollToNextComment = (e: MouseEvent<HTMLButtonElement>) => {
     if (dragging) return;
@@ -120,13 +94,13 @@ export const ArrowButton: FC<{
   };
 
   const startDragTimer = () => {
-    delayTimer.current = setTimeout(() => {
+    dragDelayTimer.current = setTimeout(() => {
       setDragging(true);
     }, moveDelay);
   };
 
   const updatePositionAndEndDragging = () => {
-    clearTimeout(delayTimer.current);
+    clearTimeout(dragDelayTimer.current);
     if (dragging) {
       setArrowPosition({
         x: buttonRef.current?.offsetLeft,
@@ -136,6 +110,7 @@ export const ArrowButton: FC<{
     setDragging(false);
   };
 
+  const buttonDisabled = props.topLevelComments?.length <= 0;
   return (
     <>
       <Moveable
@@ -149,9 +124,7 @@ export const ArrowButton: FC<{
       />
       <button
         ref={buttonRef}
-        className={`draggable-btn ${
-          props.topLevelComments?.length <= 0 ? "disabled" : ""
-        }`}
+        className={`draggable-btn ${buttonDisabled ? "disabled" : ""}`}
         style={{
           width: `${iconSize}px`,
           height: `${iconSize}px`,
