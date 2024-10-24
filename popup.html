@@ -13,6 +13,10 @@
         padding: 8px;
       }
 
+      input[type="color"] {
+        min-height: 40px;
+      }
+
       label {
         font-size: 16px;
       }
@@ -28,6 +32,20 @@
       button:hover {
         background-color: #ddd;
         cursor: pointer;
+      }
+
+      .flex-wrapper {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .row {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .align-items-center {
+        align-items: center;
       }
 
       .header {
@@ -125,6 +143,26 @@
           data-i18n="popup_scrolling_scroll_to_option_nextComment"
         ></option>
       </select>
+      <div class="flex-wrapper">
+        <div class="row align-items-center">
+          <label
+            style="flex: 1; text-align: center"
+            for="fillColor"
+            data-i18n="popup_color_fill"
+          >
+          </label>
+          <label
+            style="flex: 1; text-align: center"
+            for="strokeColor"
+            data-i18n="popup_color_stroke"
+          >
+          </label>
+        </div>
+        <div class="row align-items-center">
+          <input style="flex: 1" type="color" id="fillColor" />
+          <input style="flex: 1" type="color" id="strokeColor" />
+        </div>
+      </div>
 
       <button id="saveOptions" data-i18n="popup_save_label"></button>
       <button id="resetOptions" data-i18n="popup_reset_options_label"></button>

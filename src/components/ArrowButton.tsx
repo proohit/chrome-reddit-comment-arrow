@@ -1,15 +1,29 @@
 import React, { FC, MouseEvent, useState } from "react";
 import Moveable, { OnDrag } from "react-moveable";
 import { useChromeStorageLocal } from "use-chrome-storage";
+import CommentArrow from "../../images/Reddit-Comment-Arrow.svg";
 import { debug } from "../helpers/utils";
 import { ScrollingOptions } from "../interfaces/scrolling-options.interface";
 import { findNextComment, scrollToComment } from "../services/comments";
-export const DEFAULT_ARROW_POSITION = (iconSize: number) => ({
+type Options = {
+  moveDelay: number;
+  iconSize: number;
+  scrolling: ScrollingOptions;
+  arrowPosition: { x: string; y: string };
+  stroke?: string;
+  fill?: string;
+};
+export const DEFAULT_ARROW_POSITION = (
+  iconSize: number
+): {
+  x: string;
+  y: string;
+} => ({
   x: `calc(100% - ${iconSize}px - 25px)`,
   y: "50vh",
 });
 
-export const DEFAULT_OPTIONS = {
+export const DEFAULT_OPTIONS: Options = {
   moveDelay: 500,
   iconSize: 80,
   scrolling: {
@@ -18,6 +32,8 @@ export const DEFAULT_OPTIONS = {
     scrollTo: "topLevelComment",
   } as ScrollingOptions,
   arrowPosition: DEFAULT_ARROW_POSITION(80),
+  stroke: undefined,
+  fill: undefined,
 };
 
 export const ArrowButton: FC<{
@@ -41,6 +57,15 @@ export const ArrowButton: FC<{
     "arrowPosition",
     DEFAULT_OPTIONS.arrowPosition
   );
+  const [userSelectedStroke] = useChromeStorageLocal(
+    "stroke",
+    DEFAULT_OPTIONS.stroke
+  );
+  const [userSelectedFill] = useChromeStorageLocal(
+    "fill",
+    DEFAULT_OPTIONS.fill
+  );
+
   const [dragging, setDragging] = useState(false);
   const buttonRef = React.useRef(null);
 
@@ -133,6 +158,8 @@ export const ArrowButton: FC<{
           left: arrowPosition?.x,
           top: arrowPosition?.y,
           cursor: dragging ? "move" : "pointer",
+          fill: userSelectedFill,
+          stroke: userSelectedStroke,
         }}
         title={
           props.topLevelComments?.length <= 0
@@ -141,11 +168,7 @@ export const ArrowButton: FC<{
         }
         onClick={findAndScrollToNextComment}
       >
-        <img
-          src={chrome.runtime.getURL("./images/Reddit-Comment-Arrow.svg")}
-          height="100%"
-          width="100%"
-        />
+        <CommentArrow />
       </button>
     </>
   );

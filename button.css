@@ -8,6 +8,20 @@
   margin: 0;
 }
 
+@media (prefers-color-scheme: dark) {
+  .draggable-btn {
+    fill: #292929;
+    stroke: #f2f3f5;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .draggable-btn {
+    fill: #f2f3f5;
+    stroke: #0a0a0a;
+  }
+}
+
 .disabled {
   cursor: auto;
   opacity: 0.5;

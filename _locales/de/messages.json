@@ -55,6 +55,14 @@
         "message": "Nächster Kommentar",
         "description": "Label für die Option 'Nächster Kommentar' der Scroll-To-Option"
     },
+    "popup_color_fill": {
+        "message": "Hintergrundfarbe",
+        "description": "Label des Hintergrundfarbenfeldes"
+    },
+    "popup_color_stroke": {
+        "message": "Pfeilfarbe",
+        "description": "Label des Pfeilfarbenfeldes"
+    },
     "popup_save_label": {
         "message": "Speichern",
         "description": "Label des Speichernknopfes"

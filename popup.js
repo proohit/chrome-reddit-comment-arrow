@@ -19,6 +19,8 @@ chrome.storage.local.get(
       behavior: "smooth",
       scrollTo: "topLevelComment",
     },
+    stroke: "",
+    fill: "",
   },
   (res) => {
     document.getElementById("iconSize").value = res.iconSize;
@@ -26,10 +28,14 @@ chrome.storage.local.get(
     document.getElementById("scrollingStrategy").value = res.scrolling.strategy;
     document.getElementById("scrollTo").value = res.scrolling.scrollTo;
     document.getElementById("scrollingBehavior").value = res.scrolling.behavior;
+    if (res.stroke) document.getElementById("strokeColor").value = res.stroke;
+    if (res.fill) document.getElementById("fillColor").value = res.fill;
   }
 );
 
 const handleSave = () => {
+  console.log(document.getElementById("strokeColor").value);
+
   return chrome.storage.local.set({
     iconSize: document.getElementById("iconSize").value,
     moveDelay: document.getElementById("moveDelay").value,
@@ -38,6 +44,8 @@ const handleSave = () => {
       behavior: document.getElementById("scrollingBehavior").value,
       scrollTo: document.getElementById("scrollTo").value,
     },
+    stroke: document.getElementById("strokeColor").value,
+    fill: document.getElementById("fillColor").value,
   });
 };
 
@@ -46,6 +54,8 @@ const handleResetSave = async () => {
     iconSize: "80",
     moveDelay: 500,
     scrolling: { strategy: "top", behavior: "smooth" },
+    fillColor: undefined,
+    strokeColor: undefined,
   });
 
   document.getElementById("iconSize").value = "80";
@@ -53,6 +63,8 @@ const handleResetSave = async () => {
   document.getElementById("scrollingStrategy").value = "top";
   document.getElementById("scrollingBehavior").value = "smooth";
   document.getElementById("scrollTo").value = "topLevelComment";
+  document.getElementById("strokeColor").value = "";
+  document.getElementById("fillColor").value = "";
 };
 
 const handleResetButtonPosition = () => {
