@@ -22,4 +22,6 @@ export const DEFAULT_OPTIONS: Options = {
   arrowPosition: DEFAULT_ARROW_POSITION(80),
   stroke: undefined,
   fill: undefined,
+  strokeEnabled: false,
+  fillEnabled: false,
 };

@@ -21,6 +21,8 @@ chrome.storage.local.get(
     },
     stroke: "",
     fill: "",
+    fillEnabled: false,
+    strokeEnabled: false,
   },
   (res) => {
     document.getElementById("iconSize").value = res.iconSize;
@@ -28,13 +30,19 @@ chrome.storage.local.get(
     document.getElementById("scrollingStrategy").value = res.scrolling.strategy;
     document.getElementById("scrollTo").value = res.scrolling.scrollTo;
     document.getElementById("scrollingBehavior").value = res.scrolling.behavior;
-    if (res.stroke) document.getElementById("strokeColor").value = res.stroke;
-    if (res.fill) document.getElementById("fillColor").value = res.fill;
+    if (res.stroke && res.strokeEnabled)
+      document.getElementById("strokeColor").value = res.stroke;
+    if (res.fill && res.fillEnabled)
+      document.getElementById("fillColor").value = res.fill;
+
+    document.getElementById("fillCheckbox").checked = res.fillEnabled;
+    document.getElementById("strokeCheckbox").checked = res.strokeEnabled;
   }
 );
 
 const handleSave = () => {
-  console.log(document.getElementById("strokeColor").value);
+  const strokeEnabled = document.getElementById("strokeCheckbox").checked;
+  const fillEnabled = document.getElementById("fillCheckbox").checked;
 
   return chrome.storage.local.set({
     iconSize: document.getElementById("iconSize").value,
@@ -44,8 +52,12 @@ const handleSave = () => {
       behavior: document.getElementById("scrollingBehavior").value,
       scrollTo: document.getElementById("scrollTo").value,
     },
-    stroke: document.getElementById("strokeColor").value,
-    fill: document.getElementById("fillColor").value,
+    stroke: strokeEnabled
+      ? document.getElementById("strokeColor").value
+      : undefined,
+    fill: fillEnabled ? document.getElementById("fillColor").value : undefined,
+    fillEnabled,
+    strokeEnabled,
   });
 };
 
@@ -54,8 +66,10 @@ const handleResetSave = async () => {
     iconSize: "80",
     moveDelay: 500,
     scrolling: { strategy: "top", behavior: "smooth" },
-    fillColor: "",
-    strokeColor: "",
+    fill: "",
+    stroke: "",
+    fillEnabled: false,
+    strokeEnabled: false,
   });
 
   document.getElementById("iconSize").value = "80";
@@ -65,6 +79,8 @@ const handleResetSave = async () => {
   document.getElementById("scrollTo").value = "topLevelComment";
   document.getElementById("strokeColor").value = "";
   document.getElementById("fillColor").value = "";
+  document.getElementById("fillCheckbox").checked = false;
+  document.getElementById("strokeCheckbox").checked = false;
 };
 
 const handleResetButtonPosition = () => {

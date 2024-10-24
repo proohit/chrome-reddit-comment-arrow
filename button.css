@@ -10,15 +10,23 @@
 
 @media (prefers-color-scheme: dark) {
   .draggable-btn {
-    fill: #292929;
-    stroke: #f2f3f5;
+    circle {
+      fill: var(--arrow-fill-dark);
+    }
+    path {
+      stroke: var(--arrow-stroke-dark);
+    }
   }
 }
 
 @media (prefers-color-scheme: light) {
   .draggable-btn {
-    fill: #f2f3f5;
-    stroke: #0a0a0a;
+    circle {
+      fill: var(--arrow-fill-light);
+    }
+    path {
+      stroke: var(--arrow-stroke-light);
+    }
   }
 }
 

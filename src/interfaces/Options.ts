@@ -7,4 +7,6 @@ export type Options = {
   arrowPosition: { x: string; y: string };
   stroke?: string;
   fill?: string;
+  strokeEnabled?: boolean;
+  fillEnabled?: boolean;
 };

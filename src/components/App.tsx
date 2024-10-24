@@ -3,6 +3,7 @@ import { debug } from "../helpers/utils";
 import { createCommentWatcher } from "../services/comments";
 import { createUrlWatcher, isCommentsPage } from "../services/url";
 import { ArrowButton } from "./ArrowButton";
+import { ColorManager } from "./ColorManager";
 
 const useComments = () => {
   const [commentsPage, setCommentsPage] = useState(false);
@@ -64,8 +65,10 @@ export function App() {
   const { commentsPage, comments, topLevelComments } = useComments();
 
   return (
-    commentsPage && (
-      <ArrowButton comments={comments} topLevelComments={topLevelComments} />
-    )
+    <ColorManager>
+      {commentsPage && (
+        <ArrowButton comments={comments} topLevelComments={topLevelComments} />
+      )}
+    </ColorManager>
   );
 }

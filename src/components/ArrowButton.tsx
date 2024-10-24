@@ -34,14 +34,6 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
     "arrowPosition",
     DEFAULT_OPTIONS.arrowPosition
   );
-  const [userSelectedStroke] = useChromeStorageLocal(
-    "stroke",
-    DEFAULT_OPTIONS.stroke
-  );
-  const [userSelectedFill] = useChromeStorageLocal(
-    "fill",
-    DEFAULT_OPTIONS.fill
-  );
 
   const findAndScrollToNextComment = (e: MouseEvent<HTMLButtonElement>) => {
     if (dragging) return;
@@ -131,8 +123,6 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
           left: arrowPosition?.x,
           top: arrowPosition?.y,
           cursor: dragging ? "move" : "pointer",
-          fill: userSelectedFill,
-          stroke: userSelectedStroke,
         }}
         title={
           props.topLevelComments?.length <= 0
