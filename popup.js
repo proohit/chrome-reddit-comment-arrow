@@ -54,8 +54,8 @@ const handleResetSave = async () => {
     iconSize: "80",
     moveDelay: 500,
     scrolling: { strategy: "top", behavior: "smooth" },
-    fillColor: undefined,
-    strokeColor: undefined,
+    fillColor: "",
+    strokeColor: "",
   });
 
   document.getElementById("iconSize").value = "80";
