@@ -9,7 +9,7 @@ const useComments = () => {
   const [topLevelComments, setTopLevelComments] = useState([]);
   const [comments, setComments] = useState([]);
 
-  function onUrlChange(newUrl) {
+  function onUrlChange(newUrl: string) {
     if (isCommentsPage(newUrl)) {
       debug("Url changed and is comments page");
       setCommentsPage(true);

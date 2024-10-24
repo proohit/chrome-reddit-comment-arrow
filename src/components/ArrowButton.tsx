@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import Moveable from "react-moveable";
+import React, { FC, MouseEvent, useState } from "react";
+import Moveable, { OnDrag } from "react-moveable";
 import { useChromeStorageLocal } from "use-chrome-storage";
 import { debug } from "../helpers/utils";
 import { ScrollingOptions } from "../interfaces/scrolling-options.interface";
 import { findNextComment, scrollToComment } from "../services/comments";
-export const DEFAULT_ARROW_POSITION = (iconSize) => ({
+export const DEFAULT_ARROW_POSITION = (iconSize: number) => ({
   x: `calc(100% - ${iconSize}px - 25px)`,
   y: "50vh",
 });
@@ -20,7 +20,10 @@ export const DEFAULT_OPTIONS = {
   arrowPosition: DEFAULT_ARROW_POSITION(80),
 };
 
-export const ArrowButton = (props) => {
+export const ArrowButton: FC<{
+  topLevelComments: HTMLElement[];
+  comments: HTMLElement[];
+}> = (props) => {
   const delayTimer = React.useRef(null);
   const [moveDelay] = useChromeStorageLocal(
     "moveDelay",
@@ -41,8 +44,7 @@ export const ArrowButton = (props) => {
   const [dragging, setDragging] = useState(false);
   const buttonRef = React.useRef(null);
 
-  const findAndScrollToNextComment = (e) => {
-    e.preventDefault();
+  const findAndScrollToNextComment = (e: MouseEvent<HTMLButtonElement>) => {
     if (dragging) return;
     let nextComment: HTMLElement | null = null;
     if (scrolling.scrollTo === "topLevelComment") {
@@ -56,7 +58,7 @@ export const ArrowButton = (props) => {
     debug(nextComment);
   };
 
-  const moveButton = (e) => {
+  const moveButton = (e: OnDrag) => {
     if (dragging) {
       const screenWidth = window.visualViewport?.width ?? window.innerWidth;
       const screenHeight = window.visualViewport?.height ?? window.innerHeight;
@@ -98,7 +100,7 @@ export const ArrowButton = (props) => {
     }, moveDelay);
   };
 
-  const updatePositionAndEndDragging = (e) => {
+  const updatePositionAndEndDragging = () => {
     clearTimeout(delayTimer.current);
     if (dragging) {
       setArrowPosition({

@@ -4,6 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "react",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true
   }
 }

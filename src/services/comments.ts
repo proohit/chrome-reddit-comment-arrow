@@ -21,7 +21,7 @@ export const getAllComments = (): HTMLElement[] => {
 export const getAllTopLevelComments = () => {
   const topLevelCommentsNewArch = [
     ...document.querySelectorAll("shreddit-comment-tree > shreddit-comment"),
-  ];
+  ] as HTMLElement[];
   if (topLevelCommentsNewArch.length > 0) return topLevelCommentsNewArch;
 
   const allComments = getAllComments();
@@ -59,7 +59,12 @@ export const findNextComment = (
   return null;
 };
 
-export const createCommentWatcher = (onNewCommentsAvailable) =>
+export const createCommentWatcher = (
+  onNewCommentsAvailable: (
+    allComments: HTMLElement[],
+    topLevelComments: HTMLElement[]
+  ) => void
+) =>
   new MutationObserver(
     debounce(() => {
       const newTopLevelComments = getAllTopLevelComments();
@@ -95,14 +100,17 @@ const scrollToCommentAtTop = (
   }
 };
 
-const scrollToCommentAtCenter = (comment, scrollingOptions) => {
+const scrollToCommentAtCenter = (
+  comment: HTMLElement,
+  scrollingOptions: ScrollingOptions
+) => {
   comment.scrollIntoView({
     behavior: scrollingOptions.behavior,
     block: "center",
   });
 };
 
-const findNextCommentNearestToCenter = (topLevelComments) => {
+const findNextCommentNearestToCenter = (topLevelComments: HTMLElement[]) => {
   let absoluteYViewportCenter = window.innerHeight / 2 + window.scrollY;
   return findNextCommentWith(absoluteYViewportCenter, topLevelComments, 0);
 };
