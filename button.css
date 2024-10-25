@@ -31,6 +31,6 @@
 }
 
 .disabled {
-  cursor: auto;
+  cursor: none;
   opacity: 0.5;
 }

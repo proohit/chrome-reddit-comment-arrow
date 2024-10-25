@@ -23,6 +23,7 @@ chrome.storage.local.get(
     fill: "",
     fillEnabled: false,
     strokeEnabled: false,
+    includeArticles: true,
   },
   (res) => {
     document.getElementById("iconSize").value = res.iconSize;
@@ -37,6 +38,7 @@ chrome.storage.local.get(
 
     document.getElementById("fillCheckbox").checked = res.fillEnabled;
     document.getElementById("strokeCheckbox").checked = res.strokeEnabled;
+    document.getElementById("includeArticles").checked = res.includeArticles;
   }
 );
 
@@ -58,6 +60,7 @@ const handleSave = () => {
     fill: fillEnabled ? document.getElementById("fillColor").value : undefined,
     fillEnabled,
     strokeEnabled,
+    includeArticles: document.getElementById("includeArticles").checked,
   });
 };
 
@@ -70,6 +73,7 @@ const handleResetSave = async () => {
     stroke: "",
     fillEnabled: false,
     strokeEnabled: false,
+    includeArticles: true,
   });
 
   document.getElementById("iconSize").value = "80";
@@ -81,6 +85,7 @@ const handleResetSave = async () => {
   document.getElementById("fillColor").value = "";
   document.getElementById("fillCheckbox").checked = false;
   document.getElementById("strokeCheckbox").checked = false;
+  document.getElementById("includeArticles").checked = true;
 };
 
 const handleResetButtonPosition = () => {
@@ -92,20 +97,12 @@ const handleResetButtonPosition = () => {
   });
 };
 
-const closePopup = () => {
-  window.close();
-};
-
 document.getElementById("saveOptions").onclick = async () => {
   await handleSave();
-
-  closePopup();
 };
 
 document.getElementById("resetOptions").onclick = async () => {
   await handleResetSave();
-
-  closePopup();
 };
 
 document.getElementById("resetPosition").onclick = async () => {

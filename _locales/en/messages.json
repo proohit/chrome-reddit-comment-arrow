@@ -63,6 +63,10 @@
         "message": "Custom arrow stroke color",
         "description": "Label of the arrow stroke color field."
     },
+    "popup_articles": {
+        "message": "Also use articles in home feed",
+        "description": "Label of the articles field."
+    },
     "popup_save_label": {
         "message": "Save",
         "description": "Label for the save button."
@@ -82,5 +86,9 @@
     "extension_comments_loading": {
         "message": "Loading top level comments...",
         "description": "Message shown when the comments are loading."
+    },
+    "extension_articles_loading": {
+        "message": "Loading articles...",
+        "description": "Message shown when the articles are loading."
     }
 }

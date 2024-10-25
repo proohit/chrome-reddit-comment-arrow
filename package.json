@@ -2,7 +2,8 @@
   "name": "chrome-reddit-comment-arrow",
   "scripts": {
     "build": "ENV=production rollup -c rollup.config.mjs",
-    "dev": "ENV=development npm run build -- --watch",
+    "build:dev": "ENV=development rollup -c rollup.config.mjs",
+    "dev": "npm run build:dev -- --watch",
     "zip": "bestzip extension.zip manifest.json content.js button.css popup.html popup.js images/ README.md LICENSE.md _locales",
     "tsc": "tsc -p tsconfig.check.json",
     "package": "npm run build && npm run zip && mv extension.zip --"

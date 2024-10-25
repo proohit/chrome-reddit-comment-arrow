@@ -63,6 +63,10 @@
         "message": "Pfeilfarbe",
         "description": "Label des Pfeilfarbenfeldes"
     },
+    "popup_articles": {
+        "message": "Artikel auf der Startseite berücksichtigen",
+        "description": "Label des Artikelfeldes"
+    },
     "popup_save_label": {
         "message": "Speichern",
         "description": "Label des Speichernknopfes"
@@ -82,5 +86,9 @@
     "extension_comments_loading": {
         "message": "Lade Kommentare...",
         "description": "Anzeige, wenn die Kommentare noch geladen werden"
+    },
+    "extension_articles_loading": {
+        "message": "Lade Artikel...",
+        "description": "Anzeige, wenn die Artikel noch geladen werden"
     }
 }

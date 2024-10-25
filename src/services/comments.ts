@@ -1,4 +1,4 @@
-import { debounce, debug } from "../helpers/utils";
+import { debounce } from "../helpers/utils";
 import { ScrollingOptions } from "../interfaces/scrolling-options.interface";
 import {
   getOverlayPostScrollContainer,
@@ -33,27 +33,33 @@ export const getAllTopLevelComments = () => {
   });
 };
 
-export const scrollToComment = (
-  comment: HTMLElement,
+export const getAllArticles = () => {
+  const articles = [...document.querySelectorAll("article")] as HTMLElement[];
+
+  return articles;
+};
+
+export const scrollToElement = (
+  element: HTMLElement,
   scrollingOptions: ScrollingOptions
 ) => {
-  if (!comment) return;
+  if (!element) return;
   if (scrollingOptions.strategy === "center") {
-    scrollToCommentAtCenter(comment, scrollingOptions);
+    scrollToElementAtCenter(element, scrollingOptions);
   } else if (scrollingOptions.strategy === "top") {
-    scrollToCommentAtTop(comment, scrollingOptions);
+    scrollToElementAtTop(element, scrollingOptions);
   }
 };
 
-export const findNextComment = (
+export const findNextElement = (
   scrollingOptions: ScrollingOptions,
-  topLevelComments: HTMLElement[]
+  elements: HTMLElement[]
 ) => {
   const strategy = scrollingOptions.strategy;
   if (strategy === "top") {
-    return findNextCommentNearestToTop(topLevelComments);
+    return findNextCommentNearestToTop(elements);
   } else if (strategy === "center") {
-    return findNextCommentNearestToCenter(topLevelComments);
+    return findNextCommentNearestToCenter(elements);
   }
 
   return null;
@@ -63,18 +69,20 @@ export const createCommentWatcher = (
   onNewCommentsAvailable: (
     allComments: HTMLElement[],
     topLevelComments: HTMLElement[]
-  ) => void
+  ) => void,
+  onNewArticlesAvailable: (articles: HTMLElement[]) => void
 ) =>
   new MutationObserver(
     debounce(() => {
       const newTopLevelComments = getAllTopLevelComments();
       const allComments = getAllComments();
       onNewCommentsAvailable(allComments, newTopLevelComments);
-      debug("dom changed, reloading top level comments", newTopLevelComments);
+      const newArticles = getAllArticles();
+      onNewArticlesAvailable(newArticles);
     }, 200)
   );
 
-const scrollToCommentAtTop = (
+const scrollToElementAtTop = (
   comment: HTMLElement,
   scrollingOptions: ScrollingOptions
 ) => {
@@ -100,7 +108,7 @@ const scrollToCommentAtTop = (
   }
 };
 
-const scrollToCommentAtCenter = (
+const scrollToElementAtCenter = (
   comment: HTMLElement,
   scrollingOptions: ScrollingOptions
 ) => {
