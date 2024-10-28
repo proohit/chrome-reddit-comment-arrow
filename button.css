@@ -29,6 +29,23 @@
     }
   }
 }
+:root:not(.theme-light) .draggable-btn {
+  circle {
+    fill: var(--arrow-fill-dark);
+  }
+  path {
+    stroke: var(--arrow-stroke-dark);
+  }
+}
+
+:root.theme-light .draggable-btn {
+  circle {
+    fill: var(--arrow-fill-light);
+  }
+  path {
+    stroke: var(--arrow-stroke-light);
+  }
+}
 
 .disabled {
   cursor: none;
