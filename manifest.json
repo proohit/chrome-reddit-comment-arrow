@@ -29,7 +29,8 @@
         "button.css"
       ],
       "matches": [
-        "https://www.reddit.com/*"
+        "https://www.reddit.com/*",
+        "https://reddit.com/*"
       ]
     }
   ],
@@ -39,7 +40,8 @@
         "images/Reddit-Comment-Arrow.svg"
       ],
       "matches": [
-        "https://www.reddit.com/*"
+        "https://www.reddit.com/*",
+        "https://reddit.com/*"
       ]
     }
   ]
