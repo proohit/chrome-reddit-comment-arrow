@@ -4,7 +4,7 @@
     "build": "ENV=production rollup -c rollup.config.mjs",
     "build:dev": "ENV=development rollup -c rollup.config.mjs",
     "dev": "npm run build:dev -- --watch",
-    "zip": "bestzip extension.zip manifest.json content.js button.css popup.html popup.js images/ README.md LICENSE.md _locales",
+    "zip": "bestzip extension.zip manifest.json content.js background.js button.css popup.html popup.js images/ README.md LICENSE.md _locales",
     "tsc": "tsc -p tsconfig.check.json",
     "package": "npm run build && npm run zip && mv extension.zip --"
   },
