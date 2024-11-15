@@ -30,7 +30,10 @@ export function isElementInViewport(
 export function getRelativePositionInBounds(
   x: number,
   y: number,
-  iconSizeNumber: number
+  elementSize: {
+    width: number;
+    height: number;
+  }
 ) {
   const screenWidth = window.visualViewport?.width ?? window.innerWidth;
   const screenHeight = window.visualViewport?.height ?? window.innerHeight;
@@ -40,14 +43,14 @@ export function getRelativePositionInBounds(
     y: (y / screenHeight) * 100 + "%",
   };
 
-  if (exceedsRightBoundary(x, iconSizeNumber)) {
-    newPosition.x = `calc(100% - ${iconSizeNumber}px)`;
+  if (exceedsRightBoundary(x, elementSize.width)) {
+    newPosition.x = `calc(100% - ${elementSize.width}px)`;
   }
   if (exceedsLeftBoundary(x)) {
     newPosition.x = "0%";
   }
-  if (exceedsBottomBoundary(y, iconSizeNumber)) {
-    newPosition.y = `calc(100% - ${iconSizeNumber}px)`;
+  if (exceedsBottomBoundary(y, elementSize.height)) {
+    newPosition.y = `calc(100% - ${elementSize.height}px)`;
   }
   if (exceedsTopBoundary(y)) {
     newPosition.y = "0%";

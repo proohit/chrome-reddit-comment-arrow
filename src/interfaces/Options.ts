@@ -9,4 +9,6 @@ export type Options = {
   fill?: string;
   strokeEnabled?: boolean;
   fillEnabled?: boolean;
+  includeArticles?: boolean;
+  showScrollTop?: boolean;
 };

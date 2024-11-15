@@ -24,6 +24,7 @@ chrome.storage.local.get(
     fillEnabled: false,
     strokeEnabled: false,
     includeArticles: true,
+    showScrollTop: true,
   },
   (res) => {
     document.getElementById("iconSize").value = res.iconSize;
@@ -39,6 +40,7 @@ chrome.storage.local.get(
     document.getElementById("fillCheckbox").checked = res.fillEnabled;
     document.getElementById("strokeCheckbox").checked = res.strokeEnabled;
     document.getElementById("includeArticles").checked = res.includeArticles;
+    document.getElementById("showScrollTop").checked = res.showScrollTop;
   }
 );
 
@@ -61,6 +63,7 @@ const handleSave = () => {
     fillEnabled,
     strokeEnabled,
     includeArticles: document.getElementById("includeArticles").checked,
+    showScrollTop: document.getElementById("showScrollTop").checked,
   });
 };
 
@@ -74,6 +77,7 @@ const handleResetSave = async () => {
     fillEnabled: false,
     strokeEnabled: false,
     includeArticles: true,
+    showScrollTop: true,
   });
 
   document.getElementById("iconSize").value = "80";
@@ -86,6 +90,7 @@ const handleResetSave = async () => {
   document.getElementById("fillCheckbox").checked = false;
   document.getElementById("strokeCheckbox").checked = false;
   document.getElementById("includeArticles").checked = true;
+  document.getElementById("showScrollTop").checked = true;
 };
 
 const handleResetButtonPosition = () => {

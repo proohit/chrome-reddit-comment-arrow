@@ -1,15 +1,11 @@
 <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-    <g filter="url(#filter0_i_1_34)">
-        <circle cx="64" cy="64" r="64" />
-    </g>
     <line x1="1" y1="-1" x2="44.2548" y2="-1"
-        transform="matrix(0.70711 0.707104 -0.707111 0.707103 33.2308 62.5108)"
-        stroke-width="2" stroke-linecap="round" />
-    <line x1="94.7725" y1="62.9525" x2="65.7827" y2="92.8733" stroke-width="2"
+        transform="matrix(0.70711 0.707104 -0.707111 0.707103 33 62.0493)" stroke-width="2"
+        stroke-linecap="round" />
+    <line x1="94.5417" y1="62.4909" x2="65.5519" y2="92.4118" stroke-width="2"
         stroke-linecap="round" />
     <line x1="1" y1="-1" x2="44.2548" y2="-1"
-        transform="matrix(0.70711 0.707104 -0.707111 0.707103 33.2308 35.4339)"
-        stroke-width="2" stroke-linecap="round" />
-    <line x1="94.7725" y1="35.8755" x2="65.7827" y2="65.7964" stroke-width="2"
+        transform="matrix(0.70711 0.707104 -0.707111 0.707103 33 34.9723)" stroke-width="2"
         stroke-linecap="round" />
+    <line x1="94.5417" y1="35.414" x2="65.5519" y2="65.3348" stroke-width="2" stroke-linecap="round" />
 </svg>

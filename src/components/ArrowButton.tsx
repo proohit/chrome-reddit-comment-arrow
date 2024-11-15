@@ -1,8 +1,12 @@
 import React, { FC, useRef, useState } from "react";
 import Moveable, { OnDrag } from "react-moveable";
 import { useChromeStorageLocal } from "use-chrome-storage";
+import CommentArrowSingle from "../../images/Reddit-Comment-Arrow-Single.svg";
 import CommentArrow from "../../images/Reddit-Comment-Arrow.svg";
-import { DEFAULT_OPTIONS } from "../constants/default-options";
+import {
+  DEFAULT_OPTIONS,
+  scrollToTopButtonHeightFactor,
+} from "../constants/default-options";
 import { debug } from "../helpers/utils";
 import { ScrollingOptions } from "../interfaces/scrolling-options.interface";
 import { findNextElement, scrollToElement } from "../services/comments";
@@ -36,7 +40,14 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
     "arrowPosition",
     DEFAULT_OPTIONS.arrowPosition
   );
-  const [includeArticles] = useChromeStorageLocal("includeArticles", true);
+  const [includeArticles] = useChromeStorageLocal(
+    "includeArticles",
+    DEFAULT_OPTIONS.includeArticles
+  );
+  const [showScrollToTopButton] = useChromeStorageLocal(
+    "showScrollTop",
+    DEFAULT_OPTIONS.showScrollTop
+  );
 
   const findAndScrollToNextElement = () => {
     if (dragging) return;
@@ -61,11 +72,10 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
 
   const moveButton = (e: OnDrag) => {
     if (dragging) {
-      const newPosition = getRelativePositionInBounds(
-        e.left,
-        e.top,
-        Number(iconSize)
-      );
+      const newPosition = getRelativePositionInBounds(e.left, e.top, {
+        height: e.height,
+        width: e.width,
+      });
       setArrowPosition({
         x: newPosition.x,
         y: newPosition.y,
@@ -97,6 +107,12 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
       ? chrome.i18n.getMessage("extension_articles_loading")
       : "";
 
+  const commonButtonStyles = {
+    width: `${iconSize}px`,
+    height: `${iconSize}px`,
+    cursor: dragging ? "move" : "pointer",
+  };
+
   return (
     <>
       <Moveable
@@ -108,21 +124,42 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
         hideDefaultLines
         origin={null}
       />
-      <button
+      <div
         ref={buttonRef}
-        className={`draggable-btn ${buttonDisabled ? "disabled" : ""}`}
+        className={`draggable-btn `}
         style={{
-          width: `${iconSize}px`,
-          height: `${iconSize}px`,
           left: arrowPosition?.x,
           top: arrowPosition?.y,
-          cursor: dragging ? "move" : "pointer",
         }}
-        title={title}
-        onClick={findAndScrollToNextElement}
       >
-        <CommentArrow />
-      </button>
+        {showScrollToTopButton && (
+          <button
+            title={chrome.i18n.getMessage("extension_scroll_to_top")}
+            style={{
+              ...commonButtonStyles,
+              width: `${iconSize * scrollToTopButtonHeightFactor}px`,
+              height: `${iconSize * scrollToTopButtonHeightFactor}px`,
+            }}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: scrolling.behavior });
+            }}
+          >
+            <CommentArrowSingle style={{ transform: "rotate(180deg)" }} />
+          </button>
+        )}
+        <button
+          className={buttonDisabled ? "disabled" : ""}
+          style={{
+            ...commonButtonStyles,
+            width: `${iconSize}px`,
+            height: `${iconSize}px`,
+          }}
+          title={title}
+          onClick={findAndScrollToNextElement}
+        >
+          <CommentArrow />
+        </button>
+      </div>
     </>
   );
 };

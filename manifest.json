@@ -42,7 +42,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "images/Reddit-Comment-Arrow.svg"
+        "images/Reddit-Comment-Arrow.svg",
+        "images/Reddit-Comment-Arrow-Single.svg"
       ],
       "matches": [
         "https://www.reddit.com/*",

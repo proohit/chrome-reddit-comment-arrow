@@ -6,12 +6,21 @@
   background: none;
   padding: 0;
   margin: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  button {
+    padding: 0;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   .draggable-btn {
-    circle {
-      fill: var(--arrow-fill-dark);
+    button {
+      background-color: var(--arrow-fill-dark);
     }
     path {
       stroke: var(--arrow-stroke-dark);
@@ -21,8 +30,8 @@
 
 @media (prefers-color-scheme: light) {
   .draggable-btn {
-    circle {
-      fill: var(--arrow-fill-light);
+    button {
+      background-color: var(--arrow-fill-light);
     }
     path {
       stroke: var(--arrow-stroke-light);
@@ -30,8 +39,8 @@
   }
 }
 :root:not(.theme-light) .draggable-btn {
-  circle {
-    fill: var(--arrow-fill-dark);
+  button {
+    background-color: var(--arrow-fill-dark);
   }
   path {
     stroke: var(--arrow-stroke-dark);
@@ -39,8 +48,8 @@
 }
 
 :root.theme-light .draggable-btn {
-  circle {
-    fill: var(--arrow-fill-light);
+  button {
+    background-color: var(--arrow-fill-light);
   }
   path {
     stroke: var(--arrow-stroke-light);

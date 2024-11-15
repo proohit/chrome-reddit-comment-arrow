@@ -67,6 +67,10 @@
         "message": "Also use articles in home feed",
         "description": "Label of the articles field."
     },
+    "popup_showScrollTopButton": {
+        "message": "Show 'Scroll to top' button",
+        "description": "Label of the 'Scroll to top' button field."
+    },
     "popup_save_label": {
         "message": "Save",
         "description": "Label for the save button."
@@ -90,5 +94,9 @@
     "extension_articles_loading": {
         "message": "Loading articles...",
         "description": "Message shown when the articles are loading."
+    },
+    "extension_scroll_to_top": {
+        "message": "Scroll to top",
+        "description": "Message shown for the scroll to top button."
     }
 }

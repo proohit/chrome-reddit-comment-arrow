@@ -24,4 +24,7 @@ export const DEFAULT_OPTIONS: Options = {
   fill: undefined,
   strokeEnabled: false,
   fillEnabled: false,
+  includeArticles: true,
+  showScrollTop: true,
 };
+export const scrollToTopButtonHeightFactor = 0.6;

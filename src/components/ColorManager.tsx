@@ -36,7 +36,7 @@ export const ColorManager: FC<PropsWithChildren> = (props) => {
 
     style.setProperty(
       "--arrow-fill-light",
-      customFillEnaled ? userSelectedFill : "#f2f3f5"
+      customFillEnaled ? userSelectedFill : "#e8e8e8"
     );
     style.setProperty(
       "--arrow-fill-dark",

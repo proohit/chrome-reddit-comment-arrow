@@ -67,6 +67,10 @@
         "message": "Artikel auf der Startseite berücksichtigen",
         "description": "Label des Artikelfeldes"
     },
+    "popup_showScrollTopButton": {
+        "message": "Zeige 'Nach oben' Knopf",
+        "description": "Label des 'Nach oben' Knopffeldes"
+    },
     "popup_save_label": {
         "message": "Speichern",
         "description": "Label des Speichernknopfes"
@@ -90,5 +94,9 @@
     "extension_articles_loading": {
         "message": "Lade Artikel...",
         "description": "Anzeige, wenn die Artikel noch geladen werden"
+    },
+    "extension_scroll_to_top": {
+        "message": "Nach oben scrollen",
+        "description": "Anzeige des 'Nach oben scrollen' Knopfes"
     }
 }
