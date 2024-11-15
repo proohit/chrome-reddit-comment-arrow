@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import Moveable, { OnDrag } from "react-moveable";
 import { useChromeStorageLocal } from "use-chrome-storage";
 import CommentArrow from "../../images/Reddit-Comment-Arrow.svg";
@@ -6,6 +6,10 @@ import { DEFAULT_OPTIONS } from "../constants/default-options";
 import { debug } from "../helpers/utils";
 import { ScrollingOptions } from "../interfaces/scrolling-options.interface";
 import { findNextElement, scrollToElement } from "../services/comments";
+import {
+  getPositionInBounds,
+  isElementInViewport,
+} from "../services/positioning";
 
 type ArrowButtonProps = {
   articles: HTMLElement[];
@@ -38,6 +42,37 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
   );
   const [includeArticles] = useChromeStorageLocal("includeArticles", true);
 
+  useEffect(() => {
+    const handleResize = () => {
+      const isElementInView = isElementInViewport(
+        buttonRef.current?.offsetLeft,
+        buttonRef.current?.offsetTop,
+        Number(iconSize)
+      );
+
+      if (buttonRef.current && !isElementInView) {
+        const newPosition = getPositionInBounds(
+          buttonRef.current.offsetLeft,
+          buttonRef.current.offsetTop,
+          Number(iconSize)
+        );
+        setArrowPosition({
+          x: newPosition.x.toString(),
+          y: newPosition.y.toString(),
+        });
+
+        buttonRef.current.style.left = `${newPosition.x}px`;
+        buttonRef.current.style.top = `${newPosition.y}px`;
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const findAndScrollToNextElement = () => {
     if (dragging) return;
     let nextComment: HTMLElement | null = null;
@@ -61,34 +96,7 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
 
   const moveButton = (e: OnDrag) => {
     if (dragging) {
-      const screenWidth = window.visualViewport?.width ?? window.innerWidth;
-      const screenHeight = window.visualViewport?.height ?? window.innerHeight;
-      const iconSizeNumber = Number(iconSize);
-
-      let newPosition = {
-        x: e.left,
-        y: e.top,
-      };
-
-      const exceedsRightScreenBound =
-        newPosition.x + iconSizeNumber >= screenWidth;
-      const exceedsTopScreenBound = newPosition.y <= 0;
-      const exceedsBottomScreenBound =
-        newPosition.y + iconSizeNumber >= screenHeight;
-      const exceedsLeftScreenBound = newPosition.x <= 0;
-
-      if (exceedsRightScreenBound) {
-        newPosition.x = screenWidth - iconSizeNumber;
-      }
-      if (exceedsLeftScreenBound) {
-        newPosition.x = 0;
-      }
-      if (exceedsBottomScreenBound) {
-        newPosition.y = screenHeight - iconSizeNumber;
-      }
-      if (exceedsTopScreenBound) {
-        newPosition.y = 0;
-      }
+      const newPosition = getPositionInBounds(e.left, e.top, Number(iconSize));
 
       e.target.style.left = `${newPosition.x}px`;
       e.target.style.top = `${newPosition.y}px`;
