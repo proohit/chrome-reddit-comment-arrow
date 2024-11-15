@@ -27,7 +27,7 @@ export function isElementInViewport(
   );
 }
 
-export function getPositionInBounds(
+export function getRelativePositionInBounds(
   x: number,
   y: number,
   iconSizeNumber: number
@@ -36,21 +36,21 @@ export function getPositionInBounds(
   const screenHeight = window.visualViewport?.height ?? window.innerHeight;
 
   const newPosition = {
-    x,
-    y,
+    x: (x / screenWidth) * 100 + "%",
+    y: (y / screenHeight) * 100 + "%",
   };
 
   if (exceedsRightBoundary(x, iconSizeNumber)) {
-    newPosition.x = screenWidth - iconSizeNumber;
+    newPosition.x = `calc(100% - ${iconSizeNumber}px)`;
   }
   if (exceedsLeftBoundary(x)) {
-    newPosition.x = 0;
+    newPosition.x = "0%";
   }
   if (exceedsBottomBoundary(y, iconSizeNumber)) {
-    newPosition.y = screenHeight - iconSizeNumber;
+    newPosition.y = `calc(100% - ${iconSizeNumber}px)`;
   }
   if (exceedsTopBoundary(y)) {
-    newPosition.y = 0;
+    newPosition.y = "0%";
   }
 
   return newPosition;

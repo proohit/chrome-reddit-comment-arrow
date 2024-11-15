@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import Moveable, { OnDrag } from "react-moveable";
 import { useChromeStorageLocal } from "use-chrome-storage";
 import CommentArrow from "../../images/Reddit-Comment-Arrow.svg";
@@ -6,10 +6,7 @@ import { DEFAULT_OPTIONS } from "../constants/default-options";
 import { debug } from "../helpers/utils";
 import { ScrollingOptions } from "../interfaces/scrolling-options.interface";
 import { findNextElement, scrollToElement } from "../services/comments";
-import {
-  getPositionInBounds,
-  isElementInViewport,
-} from "../services/positioning";
+import { getRelativePositionInBounds } from "../services/positioning";
 
 type ArrowButtonProps = {
   articles: HTMLElement[];
@@ -20,7 +17,6 @@ type ArrowButtonProps = {
 
 export const ArrowButton: FC<ArrowButtonProps> = (props) => {
   const buttonRef = useRef(null);
-
   const dragDelayTimer = useRef(null);
   const [dragging, setDragging] = useState(false);
 
@@ -41,37 +37,6 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
     DEFAULT_OPTIONS.arrowPosition
   );
   const [includeArticles] = useChromeStorageLocal("includeArticles", true);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const isElementInView = isElementInViewport(
-        buttonRef.current?.offsetLeft,
-        buttonRef.current?.offsetTop,
-        Number(iconSize)
-      );
-
-      if (buttonRef.current && !isElementInView) {
-        const newPosition = getPositionInBounds(
-          buttonRef.current.offsetLeft,
-          buttonRef.current.offsetTop,
-          Number(iconSize)
-        );
-        setArrowPosition({
-          x: newPosition.x.toString(),
-          y: newPosition.y.toString(),
-        });
-
-        buttonRef.current.style.left = `${newPosition.x}px`;
-        buttonRef.current.style.top = `${newPosition.y}px`;
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const findAndScrollToNextElement = () => {
     if (dragging) return;
@@ -96,10 +61,17 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
 
   const moveButton = (e: OnDrag) => {
     if (dragging) {
-      const newPosition = getPositionInBounds(e.left, e.top, Number(iconSize));
-
-      e.target.style.left = `${newPosition.x}px`;
-      e.target.style.top = `${newPosition.y}px`;
+      const newPosition = getRelativePositionInBounds(
+        e.left,
+        e.top,
+        Number(iconSize)
+      );
+      setArrowPosition({
+        x: newPosition.x,
+        y: newPosition.y,
+      });
+      e.target.style.left = `${newPosition.x}%`;
+      e.target.style.top = `${newPosition.y}%`;
     }
   };
 
@@ -111,12 +83,6 @@ export const ArrowButton: FC<ArrowButtonProps> = (props) => {
 
   const updatePositionAndEndDragging = () => {
     clearTimeout(dragDelayTimer.current);
-    if (dragging) {
-      setArrowPosition({
-        x: buttonRef.current?.offsetLeft,
-        y: buttonRef.current?.offsetTop,
-      });
-    }
     setDragging(false);
   };
 
