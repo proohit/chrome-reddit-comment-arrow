@@ -8,6 +8,10 @@ import {
 } from "./ui";
 
 export const getAllComments = (): HTMLElement[] => {
+  const commentsOldReddit = [
+    ...document.querySelectorAll(".comment"),
+  ] as HTMLElement[];
+  if (commentsOldReddit.length > 0) return commentsOldReddit;
   const commentsNewArch = [
     ...document.querySelectorAll("shreddit-comment"),
   ] as HTMLElement[];
@@ -23,7 +27,14 @@ export const getAllTopLevelComments = () => {
     ...document.querySelectorAll("shreddit-comment-tree > shreddit-comment"),
   ] as HTMLElement[];
   if (topLevelCommentsNewArch.length > 0) return topLevelCommentsNewArch;
-
+  const oldRedditCommentsArea = document.querySelector(".commentarea");
+  if (oldRedditCommentsArea) {
+    return [
+      ...oldRedditCommentsArea
+        .querySelector(":scope > .sitetable")
+        .querySelectorAll(":scope > .comment"),
+    ] as HTMLElement[];
+  }
   const allComments = getAllComments();
 
   return allComments.filter((comment) => {
@@ -34,6 +45,11 @@ export const getAllTopLevelComments = () => {
 };
 
 export const getAllArticles = () => {
+  if (document.querySelector("#siteTable")) {
+    return [
+      ...document.querySelectorAll("#siteTable > .thing"),
+    ] as HTMLElement[];
+  }
   const articles = [...document.querySelectorAll("article")] as HTMLElement[];
 
   return articles;

@@ -35,7 +35,8 @@
       ],
       "matches": [
         "https://www.reddit.com/*",
-        "https://reddit.com/*"
+        "https://reddit.com/*",
+        "https://old.reddit.com/*"
       ]
     }
   ],
@@ -47,7 +48,8 @@
       ],
       "matches": [
         "https://www.reddit.com/*",
-        "https://reddit.com/*"
+        "https://reddit.com/*",
+        "https://old.reddit.com/*"
       ]
     }
   ]

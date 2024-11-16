@@ -1,10 +1,19 @@
+const commentsSubPath = "/r/.*/comments/.*";
 const redditUrlPattern = new URLPattern(
-  "/r/.*/comments/.*",
+  commentsSubPath,
   "https://www.reddit.com"
 );
 
+const oldRedditUrlPattern = new URLPattern(
+  commentsSubPath,
+  "https://old.reddit.com"
+);
+
 export const isCommentsPage = (location: string) => {
-  return redditUrlPattern.test(location.split("?")[0]);
+  return (
+    redditUrlPattern.test(location.split("?")[0]) ||
+    oldRedditUrlPattern.test(location.split("?")[0])
+  );
 };
 
 export const createUrlWatcher = (

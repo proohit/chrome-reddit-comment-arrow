@@ -7,5 +7,9 @@ chrome.contextMenus.removeAll();
 chrome.contextMenus.create({
   id: "reddit-comment-arrow-settings",
   title: "Reddit Comment Arrow",
-  documentUrlPatterns: ["https://www.reddit.com/*", "https://reddit.com/*"],
+  documentUrlPatterns: [
+    "https://www.reddit.com/*",
+    "https://reddit.com/*",
+    "https://old.reddit.com/*",
+  ],
 });
