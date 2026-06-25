@@ -9,21 +9,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - run: python3 set_version.py
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v6
         with:
-          node-version: 16
+          node-version: 24
       - name: Install dependencies
         run: npm install
       - name: Package Extension
         run: npm run package -- ./chrome-reddit-comment-arrow-${{ env.VERSION }}.zip
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v7
         with:
           name: chrome-reddit-comment-arrow-${{ env.VERSION }}
           path: ./chrome-reddit-comment-arrow-${{ env.VERSION }}.zip
       - name: Tag version
-        uses: mathieudutour/github-tag-action@v6.0
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: "${{ secrets.PAT }}"
           custom_tag: ${{ env.VERSION }}
