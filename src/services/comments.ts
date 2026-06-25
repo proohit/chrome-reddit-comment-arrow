@@ -22,26 +22,79 @@ export const getAllComments = (): HTMLElement[] => {
     .filter((comment) => !!comment);
 };
 
-export const getAllTopLevelComments = () => {
-  const topLevelCommentsNewArch = [
+const tryGetTopLevelCommentsFromCommentTree = () => {
+  const tree = document.querySelector("shreddit-comment-tree");
+  if (tree) {
+    const topLevelComments = [
+      ...tree.querySelectorAll("shreddit-comment"),
+    ].filter(
+      (comment) => !comment.parentElement?.closest("shreddit-comment"),
+    ) as HTMLElement[];
+    if (topLevelComments.length > 0) return topLevelComments as HTMLElement[];
+  }
+  return null;
+};
+
+const tryGetTopLevelCommentsDepthAttribute = () => {
+  const useDepthAttribute = !!document.querySelector(
+    "shreddit-comment[depth='0']",
+  );
+  if (useDepthAttribute) {
+    const topLevelComments = [
+      ...document.querySelectorAll("shreddit-comment[depth='0']"),
+    ] as HTMLElement[];
+    if (topLevelComments.length > 0) return topLevelComments;
+  }
+  return null;
+};
+
+const tryGetTopLevelCommentsFromCommentTreeAll = () => {
+  const topLevelComments = [
     ...document.querySelectorAll("shreddit-comment-tree > shreddit-comment"),
   ] as HTMLElement[];
-  if (topLevelCommentsNewArch.length > 0) return topLevelCommentsNewArch;
-  const oldRedditCommentsArea = document.querySelector(".commentarea");
-  if (oldRedditCommentsArea) {
-    return [
-      ...oldRedditCommentsArea
-        .querySelector(":scope > .sitetable")
-        .querySelectorAll(":scope > .comment"),
-    ] as HTMLElement[];
-  }
-  const allComments = getAllComments();
+  if (topLevelComments.length > 0) return topLevelComments;
+  return null;
+};
 
+const tryGetTopLevelCommentsOldReddit = () => {
+  const oldRedditCommentsArea = document.querySelector(".commentarea");
+  if (!oldRedditCommentsArea) return null;
+  const sitetable = oldRedditCommentsArea.querySelector(":scope > .sitetable");
+  if (!sitetable) return null;
+  const topLevelComments = sitetable.querySelectorAll(":scope > .comment");
+  if (topLevelComments.length > 0) {
+    return [...topLevelComments] as HTMLElement[];
+  }
+
+  return null;
+};
+
+const tryGetTopLevelCommentsByStyle = () => {
+  const allComments = getAllComments();
   return allComments.filter((comment) => {
     const rawPadding = comment.style.paddingLeft;
     const padding = Number(rawPadding.replace("px", ""));
     return padding <= 16;
   });
+};
+
+export const getAllTopLevelComments = () => {
+  const topLevelCommentsFromTree = tryGetTopLevelCommentsFromCommentTree();
+  if (topLevelCommentsFromTree) return topLevelCommentsFromTree;
+  const topLevelCommentsFromDepthAttribute =
+    tryGetTopLevelCommentsDepthAttribute();
+  if (topLevelCommentsFromDepthAttribute)
+    return topLevelCommentsFromDepthAttribute;
+  const topLevelCommentsFromTreeAll =
+    tryGetTopLevelCommentsFromCommentTreeAll();
+  if (topLevelCommentsFromTreeAll) return topLevelCommentsFromTreeAll;
+  const topLevelCommentsFromOldReddit = tryGetTopLevelCommentsOldReddit();
+  if (topLevelCommentsFromOldReddit) return topLevelCommentsFromOldReddit;
+  const topLevelCommentsByStyle = tryGetTopLevelCommentsByStyle();
+  if (topLevelCommentsByStyle) return topLevelCommentsByStyle;
+
+  console.debug("Could not find top level comments");
+  return [];
 };
 
 export const getAllArticles = () => {
@@ -57,7 +110,7 @@ export const getAllArticles = () => {
 
 export const scrollToElement = (
   element: HTMLElement,
-  scrollingOptions: ScrollingOptions
+  scrollingOptions: ScrollingOptions,
 ) => {
   if (!element) return;
   if (scrollingOptions.strategy === "center") {
@@ -69,7 +122,7 @@ export const scrollToElement = (
 
 export const findNextElement = (
   scrollingOptions: ScrollingOptions,
-  elements: HTMLElement[]
+  elements: HTMLElement[],
 ) => {
   const strategy = scrollingOptions.strategy;
   if (strategy === "top") {
@@ -84,9 +137,9 @@ export const findNextElement = (
 export const createCommentWatcher = (
   onNewCommentsAvailable: (
     allComments: HTMLElement[],
-    topLevelComments: HTMLElement[]
+    topLevelComments: HTMLElement[],
   ) => void,
-  onNewArticlesAvailable: (articles: HTMLElement[]) => void
+  onNewArticlesAvailable: (articles: HTMLElement[]) => void,
 ) =>
   new MutationObserver(
     debounce(() => {
@@ -95,12 +148,12 @@ export const createCommentWatcher = (
       onNewCommentsAvailable(allComments, newTopLevelComments);
       const newArticles = getAllArticles();
       onNewArticlesAvailable(newArticles);
-    }, 200)
+    }, 200),
   );
 
 const scrollToElementAtTop = (
   comment: HTMLElement,
-  scrollingOptions: ScrollingOptions
+  scrollingOptions: ScrollingOptions,
 ) => {
   let yScrollPosition = comment.getBoundingClientRect().y - headerHeight;
   if (isPostOverlay()) {
@@ -126,7 +179,7 @@ const scrollToElementAtTop = (
 
 const scrollToElementAtCenter = (
   comment: HTMLElement,
-  scrollingOptions: ScrollingOptions
+  scrollingOptions: ScrollingOptions,
 ) => {
   comment.scrollIntoView({
     behavior: scrollingOptions.behavior,
@@ -151,7 +204,7 @@ const findNextCommentNearestToTop = (topLevelComments: HTMLElement[]) => {
 const findNextCommentWith = (
   viewportY: number,
   topLevelComments: HTMLElement[],
-  skippingThreshold: number
+  skippingThreshold: number,
 ) => {
   let minimumDistance = Infinity; // defaults to high to begin search
   let minimumDistanceCommentElement: HTMLElement | null = null;
